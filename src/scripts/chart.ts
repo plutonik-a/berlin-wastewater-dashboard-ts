@@ -136,9 +136,9 @@ export function drawChart(data: ProcessedEntry[], rawData: RawDataEntry[]) {
 
     tooltip
       .style("opacity", 1)
-      .html(`
-        <strong>Date:</strong> ${d3.timeFormat("%d.%m.%Y")(dClosest.date)}<br/>
-        <strong>Value:</strong> ${dClosest.value.toFixed(2)}
+      .html(
+        `${formatDate(dClosest.date)}<br/>
+        ${formatNumberThousand(dClosest.value)} RNA copies / L
       `);
 
     const tooltipNode = tooltip.node() as HTMLElement;
