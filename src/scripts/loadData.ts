@@ -10,17 +10,7 @@
  * Expects the response to be an array of structured measurement objects.
  */
 
-export type RawDataEntry = {
-  measuring_point: string;
-  extraction_date: string;
-  results?: {
-    name?: string;
-    parameter?: {
-      name?: string;
-      result: string | number;
-    }[];
-  }[];
-};
+import type { RawDataEntry } from "./types";
 
 /**
  * Loads measurement data from the Express API endpoint.

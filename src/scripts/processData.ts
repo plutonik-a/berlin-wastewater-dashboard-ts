@@ -11,17 +11,7 @@
  */
 
 import * as d3 from "d3";
-import type { RawDataEntry } from "./loadData";
-
-type ParameterEntry = {
-  name?: string;
-  result: string | number;
-};
-
-type ResultEntry = {
-  name?: string;
-  parameter?: ParameterEntry[];
-};
+import type { RawDataEntry, ProcessedEntry } from "./types";
 
 /**
  * Extracts unique station names from the raw dataset.
@@ -49,7 +39,7 @@ export function getStations(rawData: RawDataEntry[]): string[] {
 export function filterDataByStation(
   rawData: RawDataEntry[],
   station: string
-): { date: Date; value: number; min: number; max: number }[] {
+): ProcessedEntry[] {
   if (!Array.isArray(rawData)) {
     console.warn("filterDataByStation called with invalid rawData:", rawData);
     return [];
@@ -61,14 +51,14 @@ export function filterDataByStation(
       const values: number[] = [];
 
       const relevantResults = (d.results ?? []).filter(
-        (r: ResultEntry): r is Required<ResultEntry> =>
+        (r): r is Required<typeof r> =>
           !!r.name &&
           (r.name === "dPCR_1 SARS-CoV-2 (N1)" || r.name === "dPCR_2 SARS-CoV-2 (N2)") &&
           Array.isArray(r.parameter)
       );
 
-      relevantResults.forEach((r: Required<ResultEntry>) => {
-        r.parameter.forEach((p: ParameterEntry) => {
+      relevantResults.forEach((r) => {
+        r.parameter.forEach((p) => {
           const v = parseFloat(p.result.toString().replace(",", "."));
           if (!isNaN(v)) values.push(v);
         });
@@ -84,11 +74,10 @@ export function filterDataByStation(
         date: date as Date,
         value: values.length ? (d3.mean(values) as number) : null,
         min: values.length ? (d3.min(values) as number) : null,
-        max: values.length ? (d3.max(values) as number) : null
+        max: values.length ? (d3.max(values) as number) : null,
       };
     })
-    .filter(
-      (d): d is { date: Date; value: number; min: number; max: number } =>
-        !!d.date && d.value !== null && d.min !== null && d.max !== null
+    .filter((d): d is ProcessedEntry =>
+      !!d.date && d.value !== null && d.min !== null && d.max !== null
     );
 }

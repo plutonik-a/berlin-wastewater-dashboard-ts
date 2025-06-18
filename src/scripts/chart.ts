@@ -11,6 +11,8 @@
  */
 
 import * as d3 from "d3";
+import { formatNumberThousand, formatDate } from "./format";
+import type { ProcessedEntry, RawDataEntry } from "./types";
 
 /**
  * Represents a single data point in the chart.
@@ -27,7 +29,7 @@ type DataPoint = {
  * @param data - Filtered station-specific data.
  * @param rawData - Full dataset used for global Y-axis scaling.
  */
-export function drawChart(data: DataPoint[], rawData: any[]) {
+export function drawChart(data: ProcessedEntry[], rawData: RawDataEntry[]) {
   const svg = d3.select("svg")
     .attr("viewBox", "0 0 1000 600")
     .attr("preserveAspectRatio", "xMidYMid meet");
