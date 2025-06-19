@@ -23,11 +23,13 @@ type DataPoint = {
 };
 
 /**
- * Draws a responsive D3 line chart inside the SVG element.
- * Uses a viewBox for scalability across screen sizes.
+ * Draws a D3 line chart with responsive scaling and smoothed curve.
+ * - Uses d3.curveMonotoneX to render a smooth spline
+ * - Highlights the nearest data point on hover with a vertical guide line and value label
+ * - Omits visual point markers for a cleaner appearance
  *
- * @param data - Filtered station-specific data.
- * @param rawData - Full dataset used for global Y-axis scaling.
+ * @param data - Filtered station-specific data (pre-aggregated by date)
+ * @param rawData - Full dataset used to determine global Y-axis maximum
  */
 export function drawChart(data: ProcessedEntry[], rawData: RawDataEntry[]) {
   const svg = d3.select("svg")
@@ -80,23 +82,30 @@ export function drawChart(data: ProcessedEntry[], rawData: RawDataEntry[]) {
   // Line path
   const line = d3.line<DataPoint>()
     .x(d => x(d.date))
-    .y(d => y(d.value));
+    .y(d => y(d.value))
+    .curve(d3.curveMonotoneX);
 
   g.append("path")
     .datum(data)
     .attr("fill", "none")
     .attr("stroke", "#007acc")
-    .attr("stroke-width", 2)
-    .attr("d", line);
+    .attr("stroke-width", 3)
+    .attr("d", line)
 
   // Data points
-  g.selectAll("circle")
-    .data(data)
-    .join("circle")
-    .attr("cx", d => x(d.date))
-    .attr("cy", d => y(d.value))
+  // g.selectAll("circle")
+  //   .data(data)
+  //   .join("circle")
+  //   .attr("cx", d => x(d.date))
+  //   .attr("cy", d => y(d.value))
+  //   .attr("r", 5)
+  //   .attr("fill", "#007acc");
+
+  const focusPoint = g.append("circle")
     .attr("r", 5)
-    .attr("fill", "#007acc");
+    .attr("fill", "#007acc")
+    .style("pointer-events", "none")
+    .style("opacity", 0);
 
   // Tooltip
   const tooltip = d3.select("#tooltip");
@@ -126,8 +135,14 @@ export function drawChart(data: ProcessedEntry[], rawData: RawDataEntry[]) {
     const i = bisectDate(data, x0, 1);
     const d0 = data[i - 1];
     const d1 = data[i];
+
     const dClosest = !d0 ? d1 : !d1 ? d0 : (x0.getTime() - d0.date.getTime() > d1.date.getTime() - x0.getTime() ? d1 : d0);
     if (!dClosest) return;
+
+    focusPoint
+      .attr("cx", x(dClosest.date))
+      .attr("cy", y(dClosest.value))
+      .style("opacity", 1);
 
     focusLine
       .attr("x1", x(dClosest.date))
@@ -167,6 +182,7 @@ export function drawChart(data: ProcessedEntry[], rawData: RawDataEntry[]) {
     .on("mouseout", () => {
       tooltip.style("opacity", 0);
       focusLine.style("opacity", 0);
+      focusPoint.style("opacity", 0);
     })
     .on("touchmove", event => {
       event.preventDefault();
@@ -175,5 +191,6 @@ export function drawChart(data: ProcessedEntry[], rawData: RawDataEntry[]) {
     .on("touchend", () => {
       tooltip.style("opacity", 0);
       focusLine.style("opacity", 0);
+      focusPoint.style("opacity", 0);
     });
 }
