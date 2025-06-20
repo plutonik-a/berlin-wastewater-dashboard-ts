@@ -90,16 +90,7 @@ export function drawChart(data: ProcessedEntry[], rawData: RawDataEntry[]) {
     .attr("fill", "none")
     .attr("stroke", "#007acc")
     .attr("stroke-width", 3)
-    .attr("d", line)
-
-  // Data points
-  // g.selectAll("circle")
-  //   .data(data)
-  //   .join("circle")
-  //   .attr("cx", d => x(d.date))
-  //   .attr("cy", d => y(d.value))
-  //   .attr("r", 5)
-  //   .attr("fill", "#007acc");
+    .attr("d", line);
 
   const focusPoint = g.append("circle")
     .attr("r", 5)
@@ -153,8 +144,8 @@ export function drawChart(data: ProcessedEntry[], rawData: RawDataEntry[]) {
       .style("opacity", 1)
       .html(
         `${formatDate(dClosest.date)}<br/>
-        ${formatNumberThousand(dClosest.value)} RNA copies / L
-      `);
+        ${formatNumberThousand(dClosest.value)} RNA copies / L`
+      );
 
     const tooltipNode = tooltip.node() as HTMLElement;
     const tooltipWidth = tooltipNode.offsetWidth;
