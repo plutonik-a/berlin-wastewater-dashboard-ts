@@ -157,15 +157,25 @@ export function drawChart(data: ProcessedEntry[], rawData: RawDataEntry[]) {
     const vh = window.innerHeight;
     const padding = 10;
 
-    let left = pageX + 15;
-    if (left + tooltipWidth + padding > vw) left = pageX - tooltipWidth - 15;
-    if (left < padding) left = padding;
-
+    // Position tooltip vertically: 
+    // center on pointer, adjust to stay in viewport
+    // to avoid tooltip clipping
     let top = pageY - tooltipHeight / 2;
-    if (top + tooltipHeight + padding > vh) top = vh - tooltipHeight - padding;
+    if (top + tooltipHeight + padding > vh) {
+      top = vh - tooltipHeight - padding;
+    }
     if (top < padding) top = padding;
 
-    tooltip.style("left", `${left}px`).style("top", `${top}px`);
+    let left = pageX + 15;
+    if (left + tooltipWidth + padding > vw) {
+      left = pageX - tooltipWidth - 15;
+    }
+    if (left < padding) left = padding;
+
+    // Apply final tooltip position
+    tooltip
+      .style("left", `${left}px`)
+      .style("top", `${top}px`);
   }
 
   overlay
