@@ -59,7 +59,16 @@ export function drawChart(data: ProcessedEntry[], rawData: RawDataEntry[]) {
   // Axes
   g.append("g")
     .attr("transform", `translate(0,${height})`)
-    .call(d3.axisBottom(x));
+    .call(
+      d3.axisBottom(x)
+        .ticks(d3.timeMonth.every(2))
+        .tickFormat((d: Date | d3.NumberValue) => {
+          if (d instanceof Date) {
+            return d3.timeFormat("%b %y")(d); // e.g. "Apr 22"
+          }
+          return "";
+        })
+    );
 
   g.append("g").call(d3.axisLeft(y));
 
