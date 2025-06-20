@@ -29,8 +29,9 @@ export function getStations(rawData: RawDataEntry[]): string[] {
 
 /**
  * Filters data by the selected measuring station and calculates SARS-CoV-2 values per date.
- * - Considers only dPCR results for N1 and N2.
- * - Aggregates copy_number_1–3 per test → all six values → mean, min, max.
+ * - Includes only SARS-CoV-2 test results, excluding unspecific or pan-sarbecovirus markers (e.g. E-gene).
+ * - Uses only parameters with copy_number_* in their name.
+ * - Computes the mean of copy_number values per test → aggregates test-level means per date.
  *
  * @param rawData - The full dataset loaded from the API.
  * @param station - The station name to filter data for.
@@ -41,43 +42,55 @@ export function filterDataByStation(
   station: string
 ): ProcessedEntry[] {
   if (!Array.isArray(rawData)) {
-    console.warn("filterDataByStation called with invalid rawData:", rawData);
     return [];
   }
 
   return rawData
     .filter((d) => d.measuring_point === station)
     .map((d) => {
-      const values: number[] = [];
+      const testMeans: number[] = [];
 
-      const relevantResults = (d.results ?? []).filter(
-        (r): r is Required<typeof r> =>
-          !!r.name &&
-          (r.name === "dPCR_1 SARS-CoV-2 (N1)" || r.name === "dPCR_2 SARS-CoV-2 (N2)") &&
-          Array.isArray(r.parameter)
+      const relevantResults = (d.results ?? []).filter((r) =>
+        typeof r.name === "string" &&
+        r.name.includes("SARS-CoV-2") &&
+        !r.name.includes("E-gene") &&
+        Array.isArray(r.parameter)
       );
 
       relevantResults.forEach((r) => {
-        r.parameter.forEach((p) => {
-          const v = parseFloat(p.result.toString().replace(",", "."));
-          if (!isNaN(v)) values.push(v);
-        });
-      });
+        const resultValues: number[] = [];
 
-      if (values.length > 0 && values.length < 6) {
-        console.warn(`Incomplete SARS-CoV-2 data on ${d.extraction_date}:`, values);
-      }
+        r.parameter?.forEach((p) => {
+          if (
+            !p ||
+            typeof p.name !== "string" ||
+            !p.name.startsWith("copy_number_") ||
+            (typeof p.result !== "string" && typeof p.result !== "number")
+          ) {
+            return;
+          }
+
+          const v = parseFloat(p.result.toString().replace(",", "."));
+          if (!isNaN(v)) resultValues.push(v);
+        });
+
+        if (resultValues.length > 0) {
+          const meanPerTest = d3.mean(resultValues);
+          if (meanPerTest !== undefined) testMeans.push(meanPerTest);
+        }
+      });
 
       const date = d3.timeParse("%d.%m.%Y")(d.extraction_date);
 
       return {
         date: date as Date,
-        value: values.length ? (d3.mean(values) as number) : null,
-        min: values.length ? (d3.min(values) as number) : null,
-        max: values.length ? (d3.max(values) as number) : null,
+        value: testMeans.length ? (d3.mean(testMeans) as number) : null,
+        min: testMeans.length ? (d3.min(testMeans) as number) : null,
+        max: testMeans.length ? (d3.max(testMeans) as number) : null,
       };
     })
-    .filter((d): d is ProcessedEntry =>
-      !!d.date && d.value !== null && d.min !== null && d.max !== null
+    .filter(
+      (d): d is ProcessedEntry =>
+        !!d.date && d.value !== null && d.min !== null && d.max !== null
     );
 }
