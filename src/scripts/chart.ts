@@ -71,18 +71,26 @@ export function drawChart(
     .nice()
     .range([height, 0]);
 
+  // Extract only the end of the x-axis domain (latest date)
+  const [, xEnd] = x.domain();
+
+  // Filter data to only include points within the x domain
+  const interval = d3.utcMonth.every(2);
+
+  if (!interval) throw new Error("Invalid tick interval");
+
+  // Filter out the last month tick to prevent duplicate tick mark overlapping axis line
+  const ticks = x.ticks(interval).filter(d => d < d3.utcMonth.offset(xEnd, -1));
+
   // Axes
   g.append("g")
     .attr("transform", `translate(0,${height})`)
     .call(
       d3.axisBottom(x)
-        .ticks(d3.timeMonth.every(2))
-        .tickFormat((d: Date | d3.NumberValue) => {
-          if (d instanceof Date) {
-            return d3.timeFormat("%b %y")(d); // e.g. "Apr 22"
-          }
-          return "";
-        })
+        .tickValues(ticks)
+        .tickFormat((d: Date | d3.NumberValue) =>
+          d instanceof Date ? d3.timeFormat("%b %y")(d) : ""
+        )
     );
 
   g.append("g").call(d3.axisLeft(y));
