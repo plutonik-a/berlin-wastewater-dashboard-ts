@@ -6,14 +6,14 @@ The application fetches raw data from the Berlin Hygiene Monitor API and compute
 
 ## Features
 
-- Interactive time series chart of viral loads per wastewater treatment plant
-- Mean, min, and max values calculated per sample (N1 & N2 gene targets)
-- Unified y-axis scaling for better comparison
-- Dropdown selection of measuring points
-- Daily fetch of live data from the public API
-- Automatic de-duplication of previously fetched records
-- Modular TypeScript-based code structure
-- Responsive layout (in progress)
+- Interactive time series chart of viral loads per wastewater treatment plant  
+- Mean, min, and max values calculated per sample (N1 & N2 gene targets)  
+- Unified global Y-axis scaling for consistent comparison across stations  
+- Dropdown selection of measuring points  
+- Daily fetch of live data from the public API  
+- Automatic de-duplication of previously fetched records  
+- Modular TypeScript-based code structure  
+- Responsive layout (in progress) with dynamic X-axis domain and optimized tick labels
 
 ## Technologies Used
 
