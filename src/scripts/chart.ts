@@ -12,6 +12,7 @@
 
 import * as d3 from "d3";
 import { formatNumberThousand, formatDate } from "./format";
+import { getGlobalMaxFromRawData } from "./processData";
 import type { ProcessedEntry, RawDataEntry } from "./types";
 
 /**
@@ -29,7 +30,7 @@ type DataPoint = {
  * - Omits visual point markers for a cleaner appearance
  *
  * @param data - Filtered station-specific data (pre-aggregated by date)
- * @param rawData - Full dataset used to determine global Y-axis maximum
+ * @param rawData - Full dataset used to determine global X/Y axes
  */
 export function drawChart(data: ProcessedEntry[], rawData: RawDataEntry[]) {
   const svg = d3.select("svg")
@@ -44,16 +45,19 @@ export function drawChart(data: ProcessedEntry[], rawData: RawDataEntry[]) {
 
   const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
-  const globalMax = d3.max(rawData, d =>
-    d3.max(d.results?.[0]?.parameter || [], (p: any) => +p.result)
-  ) ?? 0;
+  // Global X domain (all dates from all entries)
+  const allDates = rawData.map(d => new Date(d.extraction_date));
 
   const x = d3.scaleTime()
-    .domain(d3.extent(data, d => d.date) as [Date, Date])
+    .domain(d3.extent(allDates) as [Date, Date])
     .range([0, width]);
 
+  // Global Y domain (based on all SARS-CoV-2 values)
+  const globalMax = getGlobalMaxFromRawData(rawData);
+
   const y = d3.scaleLinear()
-    .domain([0, globalMax]).nice()
+    .domain([0, globalMax])
+    .nice()
     .range([height, 0]);
 
   // Axes
