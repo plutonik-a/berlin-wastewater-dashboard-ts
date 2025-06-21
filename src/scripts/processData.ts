@@ -96,23 +96,14 @@ export function filterDataByStation(
 }
 
 /**
- * Computes the global maximum of all copy_number values in the raw dataset.
- * Used for setting a consistent Y-axis across all stations.
+ * Computes the global maximum SARS-CoV-2 value across all processed datasets.
+ * Adds a 10% padding for better Y-axis rendering.
  *
- * @param rawData - The full dataset loaded from the API.
- * @returns Maximum numeric value found in copy_number_* fields
+ * @param datasets - Array of ProcessedEntry[] from all stations.
+ * @returns Rounded maximum value with padding.
  */
-export function getGlobalMaxFromRawData(rawData: RawDataEntry[]): number {
-  const maxAllowed = 3_000_000;
-
-  const allValues = rawData.flatMap(entry =>
-    (entry.results ?? []).flatMap(r =>
-      (r.parameter ?? [])
-        .map(p => parseFloat(p.result?.toString().replace(",", ".")))
-        .filter(v => Number.isFinite(v) && v >= 0 && v <= maxAllowed)
-    )
-  );
-
-  const max = d3.max(allValues) ?? 0;
-  return Math.min(max, maxAllowed);
+export function getGlobalMaxFromProcessedDatasets(datasets: ProcessedEntry[][]): number {
+  const allValues = datasets.flatMap(data => data.map(d => d.value));
+  const max = d3.max(allValues);
+  return max ? Math.round(max * 1.1) : 0;
 }

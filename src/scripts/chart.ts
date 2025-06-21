@@ -12,7 +12,7 @@
 
 import * as d3 from "d3";
 import { formatNumberThousand, formatDate } from "./format";
-import { getGlobalMaxFromRawData } from "./processData";
+import { getGlobalMaxFromProcessedDatasets } from "./processData";
 import type { ProcessedEntry, RawDataEntry } from "./types";
 
 /**
@@ -30,9 +30,14 @@ type DataPoint = {
  * - Omits visual point markers for a cleaner appearance
  *
  * @param data - Filtered station-specific data (pre-aggregated by date)
- * @param rawData - Full dataset used to determine global X/Y axes
+ * @param rawData - Full dataset used to determine global X axis
+ * @param allProcessed - Pre-aggregated ProcessedEntry[][] of all stations
  */
-export function drawChart(data: ProcessedEntry[], rawData: RawDataEntry[]) {
+export function drawChart(
+  data: ProcessedEntry[],
+  rawData: RawDataEntry[],
+  allProcessed: ProcessedEntry[][]
+) {
   const svg = d3.select("svg")
     .attr("viewBox", "0 0 1000 600")
     .attr("preserveAspectRatio", "xMidYMid meet");
@@ -45,15 +50,21 @@ export function drawChart(data: ProcessedEntry[], rawData: RawDataEntry[]) {
 
   const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
-  // Global X domain (all dates from all entries)
-  const allDates = rawData.map(d => new Date(d.extraction_date));
+  const allValidDates = rawData
+    .map(d => new Date(d.extraction_date))
+    .filter(d => d instanceof Date && !isNaN(d.getTime()) && d <= new Date());
+
+  const xExtent = d3.extent(allValidDates) as [Date, Date];
+
+  // Extend the x-axis date end by 1 month, in order to visually pad the end of the chart
+  // Avoids the last data point being too close to the right edge
+  const paddedEndDate = d3.timeMonth.offset(xExtent[1], 1);
 
   const x = d3.scaleTime()
-    .domain(d3.extent(allDates) as [Date, Date])
+    .domain([xExtent[0], paddedEndDate])
     .range([0, width]);
 
-  // Global Y domain (based on all SARS-CoV-2 values)
-  const globalMax = getGlobalMaxFromRawData(rawData);
+  const globalMax = getGlobalMaxFromProcessedDatasets(allProcessed);
 
   const y = d3.scaleLinear()
     .domain([0, globalMax])

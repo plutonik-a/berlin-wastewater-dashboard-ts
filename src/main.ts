@@ -37,15 +37,20 @@ loadData()
         .text((d) => d)
         .attr("value", (d) => d);
 
+      // Prepare processed datasets for all stations (used for Y-axis max)
+      const allProcessed: ProcessedEntry[][] = stations.map((station) =>
+        filterDataByStation(rawData, station)
+      );
+
       select.on("change", (event: Event) => {
         const target = event.target as HTMLSelectElement;
         const selectedStation = target.value;
         const filtered: ProcessedEntry[] = filterDataByStation(rawData, selectedStation);
-        drawChart(filtered, rawData);
+        drawChart(filtered, rawData, allProcessed);
       });
 
       const initialData: ProcessedEntry[] = filterDataByStation(rawData, stations[0]);
-      drawChart(initialData, rawData);
+      drawChart(initialData, rawData, allProcessed);
     }
   )
   .catch((error: unknown) => {
