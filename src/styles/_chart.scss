@@ -4,51 +4,50 @@
  * Licensed under the ISC License.
  */
 
- .chart-section {
-   &__container {
-     max-width: 1000px;
-     width: 100%;
-     margin: 0 auto;
-   }
+.chart-section {
+  &__container {
+    max-width: 1000px;
+    width: 100%;
+  }
 
-   &__svg {
-     width: 100%;
-     height: 600px;
-     display: block;
-   }
- }
+  &__svg {
+    width: 100%;
+    height: 600px;
+    display: block;
+  }
+}
 
- /* Chart Block */
- .chart {
-   &__overlay {
-     fill: none;
-     pointer-events: all;
-   }
+/* Chart Block */
+.chart {
+  &__overlay {
+    fill: none;
+    pointer-events: all;
+  }
 
-   &__axis-label {
-     font-size: 14px;
-     fill: #333;
-     font-weight: bold;
-   }
+  &__axis-label {
+    font-size: 15px;
+    fill: #111;
+    font-weight: 600;
+  }
 
-   &__line {
-     fill: none;
-     stroke: #007acc;
-     stroke-width: 3;
-   }
+  &__line {
+    fill: none;
+    stroke: #007acc;
+    stroke-width: 3;
+  }
 
-   &__focus-point {
-     r: 5;
-     fill: #007acc;
-     pointer-events: none;
-     opacity: 0;
-     transition: opacity 0.2s ease;
-   }
+  &__focus-point {
+    r: 5;
+    fill: #007acc;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
 
-   &__focus-line {
-     stroke: #999;
-     stroke-width: 1;
-     opacity: 0;
-     transition: opacity 0.2s ease;
-   }
- }
+  &__focus-line {
+    stroke: #999;
+    stroke-width: 1;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+}
