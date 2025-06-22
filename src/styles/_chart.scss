@@ -4,6 +4,8 @@
  * Licensed under the ISC License.
  */
 
+@import './variables';
+
 .chart-section {
   &__container {
     max-width: 1000px;
@@ -32,20 +34,25 @@
 
   &__line {
     fill: none;
-    stroke: #007acc;
-    stroke-width: 3;
+    stroke: $color-chart-line;
+    stroke-width: 1;
+  }
+
+  &__area-fill {
+    fill: $color-chart-fill;
+    pointer-events: none;
   }
 
   &__focus-point {
     r: 5;
-    fill: #007acc;
+    fill: $color-chart-line;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.2s ease;
   }
 
   &__focus-line {
-    stroke: #999;
+    stroke: $color-chart-line;
     stroke-width: 1;
     opacity: 0;
     transition: opacity 0.2s ease;

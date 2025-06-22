@@ -117,6 +117,19 @@ export function drawChart(
     .y(d => y(d.value))
     .curve(d3.curveMonotoneX);
 
+  // Area path: Fills the area under the line
+  const area = d3.area<DataPoint>()
+    .x(d => x(d.date))
+    .y0(y(0))
+    .y1(d => y(d.value))
+    .curve(d3.curveMonotoneX);
+
+  g.append("path")
+    .datum(data)
+    .attr("class", "chart__area-fill")
+    .attr("d", area);
+
+  // Line path
   g.append("path")
     .datum(data)
     .attr("class", "chart__line")
@@ -125,12 +138,13 @@ export function drawChart(
   const focusPoint = g.append("circle")
     .attr("class", "chart__focus-point");
 
-  // Tooltip
-  const tooltip = d3.select("#tooltip");
   const focusLine = g.append("line")
     .attr("class", "chart__focus-line")
     .attr("y1", 0)
     .attr("y2", height);
+
+  // Tooltip
+  const tooltip = d3.select("#tooltip");
 
   const bisectDate = d3.bisector<DataPoint, Date>(d => d.date).left;
 
@@ -163,6 +177,8 @@ export function drawChart(
     focusLine
       .attr("x1", x(dClosest.date))
       .attr("x2", x(dClosest.date))
+      .attr("y1", y(0))              // Y-axis starts at 0
+      .attr("y2", y(dClosest.value)) // focus line extends to the value
       .style("opacity", 1);
 
     tooltip
