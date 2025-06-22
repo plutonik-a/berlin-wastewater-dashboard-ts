@@ -100,7 +100,7 @@ export function drawChart(
     .attr("x", width / 2)
     .attr("y", height + 40)
     .attr("text-anchor", "middle")
-    .attr("class", "axis-label")
+    .attr("class", "chart__axis-label")
     .text("Date");
 
   g.append("text")
@@ -108,7 +108,7 @@ export function drawChart(
     .attr("y", -50)
     .attr("x", -height / 2)
     .attr("text-anchor", "middle")
-    .attr("class", "axis-label")
+    .attr("class", "chart__axis-label")
     .text("Virus Load (Average)");
 
   // Line path
@@ -119,25 +119,18 @@ export function drawChart(
 
   g.append("path")
     .datum(data)
-    .attr("fill", "none")
-    .attr("stroke", "#007acc")
-    .attr("stroke-width", 3)
+    .attr("class", "chart__line")
     .attr("d", line);
 
   const focusPoint = g.append("circle")
-    .attr("r", 5)
-    .attr("fill", "#007acc")
-    .style("pointer-events", "none")
-    .style("opacity", 0);
+    .attr("class", "chart__focus-point");
 
   // Tooltip
   const tooltip = d3.select("#tooltip");
   const focusLine = g.append("line")
-    .attr("stroke", "#999")
-    .attr("stroke-width", 1)
+    .attr("class", "chart__focus-line")
     .attr("y1", 0)
-    .attr("y2", height)
-    .style("opacity", 0);
+    .attr("y2", height);
 
   const bisectDate = d3.bisector<DataPoint, Date>(d => d.date).left;
 
@@ -146,7 +139,7 @@ export function drawChart(
     .attr("width", width)
     .attr("height", height)
     .style("fill", "none")
-    .style("pointer-events", "all");
+    .attr("class", "chart__overlay");
 
   /**
    * Updates the tooltip and vertical guide line.

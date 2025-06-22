@@ -4,6 +4,8 @@
  * Licensed under the ISC License.
  */
 
+ @use "variables" as *;
+ 
 .tooltip {
   position: absolute;
   background: white;
@@ -12,5 +14,9 @@
   font-size: 13px;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+  color: #333;
 }

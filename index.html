@@ -7,26 +7,36 @@
 -->
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Berlin Wastewater Dashboard</title>
+  <link rel="stylesheet" href="src/styles/main.css" />
 </head>
 
-<body>
-  <h1>Berlin Wastewater Dashboard</h1>
+<body class="page">
+  <header class="header">
+    <h1 class="header__title">Berlin Wastewater Dashboard</h1>
+  </header>
 
-  <label for="stationSelect">Choose measuring point:</label>
-  <select id="stationSelect"></select>
-  
-  <div id="chart-container">
-    <svg></svg>
-  </div>
+  <main class="main-content">
+    <section class="station-selector">
+      <label class="station-selector__label" for="stationSelect">Choose measuring point:</label>
+      <select class="station-selector__select" id="stationSelect"></select>
+    </section>
 
-  <div id="tooltip" class="tooltip"></div>
-  <div id="error-message" class="error-message"></div>
+    <section class="chart-section">
+      <div class="chart-section__container" id="chart-container">
+        <svg class="chart-section__svg"></svg>
+      </div>
+    </section>
+
+    <div class="tooltip" id="tooltip" aria-live="polite" role="tooltip"></div>
+    <div class="message message--error" id="error-message" role="alert" aria-live="assertive"></div>
+  </main>
+
   <script type="module" src="/src/main.ts"></script>
 </body>
 

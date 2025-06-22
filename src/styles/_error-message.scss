@@ -1,0 +1,9 @@
+@use "variables" as *;
+
+.message {
+  &--error {
+    margin-top: 1rem;
+      color: $color-error;
+      font-weight: 700;
+  }
+}

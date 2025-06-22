@@ -4,7 +4,11 @@
  * Licensed under the ISC License.
  */
 
-body {
-  font-family: sans-serif;
-  margin: 2em;
+ @use "variables" as *;
+ 
+body.page {
+  font-family: $font-family-base;
+  margin: 2rem;
+  background-color: $color-background;
+  color: #222;
 }

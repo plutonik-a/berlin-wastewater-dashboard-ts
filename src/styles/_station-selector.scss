@@ -1,0 +1,20 @@
+@use "variables" as *;
+
+.station-selector {
+  margin-bottom: 1rem;
+
+  &__label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+  }
+
+  &__select {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.5rem;
+    font-size: $font-size-base;
+    border: 1px solid $color-border;
+    border-radius: 4px;
+  }
+}
