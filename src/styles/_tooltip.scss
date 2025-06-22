@@ -4,19 +4,21 @@
  * Licensed under the ISC License.
  */
 
- @use "variables" as *;
+@use "variables" as *;
  
 .tooltip {
   position: absolute;
   background: white;
   border: 1px solid #ccc;
-  padding: 5px 10px;
-  font-size: 13px;
+  padding: 8px 12px;
+  font-size: 14px;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.2s ease;
   z-index: 10;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
   border-radius: 3px;
-  color: #333;
+  color: #222;
+  max-width: 220px;
+  word-wrap: break-word;
 }
