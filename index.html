@@ -23,8 +23,8 @@
 
   <main class="main-content">
     <section class="station-selector">
-      <label class="station-selector__label" for="stationSelect">Choose measuring point:</label>
-      <select class="station-selector__select" id="stationSelect"></select>
+      <label class="station-selector__label" id="stationSelectLabel" for="stationSelect">Choose measuring point:</label>
+      <select class="station-selector__select" id="stationSelect" aria-labelledby="stationSelectLabel" tabindex="0"></select>
     </section>
 
     <section class="chart-section">
@@ -33,7 +33,7 @@
       </div>
     </section>
 
-    <div class="tooltip" id="tooltip" aria-live="polite" role="tooltip"></div>
+    <div id="tooltip" class="tooltip" role="tooltip" aria-live="polite" aria-atomic="true" aria-hidden="true"></div>
     <div class="message message--error" id="error-message" role="alert" aria-live="assertive"></div>
   </main>
 

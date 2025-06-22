@@ -166,6 +166,7 @@ export function drawChart(
       .style("opacity", 1);
 
     tooltip
+      .attr("aria-hidden", "false")
       .style("opacity", 1)
       .html(
         `${formatDate(dClosest.date)}<br/>
@@ -207,6 +208,7 @@ export function drawChart(
     .on("mousemove", updateTooltip)
     .on("mouseout", () => {
       tooltip.style("opacity", 0);
+      tooltip.attr("aria-hidden", "true");
       focusLine.style("opacity", 0);
       focusPoint.style("opacity", 0);
     })
@@ -216,6 +218,7 @@ export function drawChart(
     })
     .on("touchend", () => {
       tooltip.style("opacity", 0);
+      tooltip.attr("aria-hidden", "true");
       focusLine.style("opacity", 0);
       focusPoint.style("opacity", 0);
     });
