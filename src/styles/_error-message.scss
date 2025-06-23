@@ -4,12 +4,10 @@
  * Licensed under the ISC License.
  */
  
-@use "variables" as *;
-
 .message {
   &--error {
     margin-top: 1rem;
-      color: $color-error;
-      font-weight: 700;
+    color: var(--color-error);
+    font-weight: 700;
   }
 }

@@ -4,8 +4,6 @@
  * Licensed under the ISC License.
  */
 
-@import './variables';
-
 .chart-section {
   &__container {
     max-width: 1000px;
@@ -28,33 +26,48 @@
 
   &__axis-label {
     font-size: 15px;
-    fill: #111;
+    fill: var(--color-text-dark);
     font-weight: 600;
   }
 
   &__line {
     fill: none;
-    stroke: $color-chart-line;
+    stroke: var(--color-chart-line);
     stroke-width: 1;
   }
 
   &__area-fill {
-    fill: $color-chart-fill;
+    fill: var(--color-chart-fill);
     pointer-events: none;
   }
 
   &__focus-point {
     r: 5;
-    fill: $color-chart-line;
+    fill: var(--color-chart-line);
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.2s ease;
   }
 
   &__focus-line {
-    stroke: $color-chart-line;
+    stroke: var(--color-chart-line);
     stroke-width: 1;
     opacity: 0;
     transition: opacity 0.2s ease;
   }
+
+  &__today-line {
+    stroke: var(--color-gray-dark);
+    stroke-width:1;
+  }
+
+  &__today-tick {
+      stroke: var(--chart-today-color);
+      stroke-width: 1.5; }
+}
+
+.tick text,
+.chart__today-label {
+  font-size: var(--chart-label-font-size);
+  fill: var(--color-gray-dark);
 }

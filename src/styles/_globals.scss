@@ -3,12 +3,10 @@
  * Copyright (c) 2025 Alexandra von Criegern
  * Licensed under the ISC License.
  */
-
-@use "variables" as *;
  
 body.page {
-  font-family: $font-family-base;
+  font-family: var(--font-family-base);
   margin: 2rem;
-  background-color: $color-background;
-  color: #222;
+  background-color: var(--color-background);
+  color: var(--color-text-dark);
 }

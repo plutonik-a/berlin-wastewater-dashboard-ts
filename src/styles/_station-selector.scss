@@ -4,8 +4,6 @@
  * Licensed under the ISC License.
  */
  
-@use "variables" as *;
-
 .station-selector {
   margin-bottom: 1rem;
 
@@ -19,8 +17,8 @@
     width: 100%;
     max-width: 300px;
     padding: 0.5rem;
-    font-size: $font-size-base;
-    border: 1px solid $color-border;
+    font-size: var(--font-size-base);
+    border: 1px solid var(--color-border);
     border-radius: 4px;
   }
 }
