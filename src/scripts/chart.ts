@@ -24,14 +24,18 @@ type DataPoint = {
 };
 
 /**
- * Draws a D3 line chart with responsive scaling and smoothed curve.
- * - Uses d3.curveMonotoneX to render a smooth spline
- * - Highlights the nearest data point on hover with a vertical guide line and value label
- * - Omits visual point markers for a cleaner appearance
+ * Renders an interactive time series chart using D3.js.
  *
- * @param data - Filtered station-specific data (pre-aggregated by date)
- * @param rawData - Full dataset used to determine global X axis
- * @param allProcessed - Pre-aggregated ProcessedEntry[][] of all stations
+ * Features:
+ * - Smooth spline rendering via d3.curveMonotoneX
+ * - Combined area and line visualization
+ * - Tooltip with nearest value highlighting on hover/touch
+ * - Custom vertical "Today" tick marker if within range
+ * - Responsive axis ticks with month-wise filtering
+ *
+ * @param data - Filtered data for the selected station (aggregated by date)
+ * @param rawData - Full raw dataset for calculating x-axis extent
+ * @param allProcessed - Aggregated values for all stations (for y-axis scaling)
  */
 export function drawChart(
   data: ProcessedEntry[],
@@ -71,16 +75,36 @@ export function drawChart(
     .nice()
     .range([height, 0]);
 
-  // Extract only the end of the x-axis domain (latest date)
-  const [, xEnd] = x.domain();
+  // "Today" tick mark at the end of x-axis
+  const today = new Date();
+
+  // Render a vertical tick + label for "Today" 
+  // if it lies within the padded x-axis domain
+  if (today <= paddedEndDate) {
+    g.append("text")
+      .attr("x", x(today))
+      .attr("y", height + 9) // same height as D3 axis ticks
+      .attr("dy", "0.71em")  // same vertical offset as axis ticks!
+      .attr("text-anchor", "middle")
+      .attr("class", "chart__today-label")
+      .text("Today");
+
+    g.append("line")
+      .attr("x1", x(today))
+      .attr("x2", x(today))
+      .attr("y1", height)
+      .attr("y2", height + 6)
+      .attr("class", "chart__today-tick");
+  }
 
   // Filter data to only include points within the x domain
   const interval = d3.utcMonth.every(2);
 
   if (!interval) throw new Error("Invalid tick interval");
 
-  // Filter out the last month tick to prevent duplicate tick mark overlapping axis line
-  const ticks = x.ticks(interval).filter(d => d < d3.utcMonth.offset(xEnd, -1));
+  // Exclude any ticks on or after the current month 
+  // to avoid overlapping with custom "Today" tick
+  const ticks = x.ticks(interval).filter(d => d < d3.timeMonth.floor(today));
 
   // Axes
   g.append("g")
@@ -193,7 +217,6 @@ export function drawChart(
     const tooltipWidth = tooltipNode.offsetWidth;
     const tooltipHeight = tooltipNode.offsetHeight;
     const pageX = (event as MouseEvent).pageX;
-    const pageY = (event as MouseEvent).pageY;
 
     const vw = window.innerWidth;
     const vh = window.innerHeight;
@@ -202,7 +225,7 @@ export function drawChart(
     // Position tooltip vertically: 
     // center on pointer, adjust to stay in viewport
     // to avoid tooltip clipping
-    let top = pageY - tooltipHeight / 2;
+    let top = y(dClosest.value) + margin.top - tooltipHeight / 2;
     if (top + tooltipHeight + padding > vh) {
       top = vh - tooltipHeight - padding;
     }
