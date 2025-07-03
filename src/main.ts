@@ -11,7 +11,11 @@
 
 import * as d3 from "d3";
 import { loadData } from "./scripts/loadData";
-import { filterDataByStation, getStations } from "./scripts/processData";
+import {
+  filterDataByStation,
+  getStations,
+  computeWeightedSeries,
+} from "./scripts/processData";
 import { drawChart } from "./scripts/chart";
 import type { RawDataEntry, ProcessedEntry } from "./scripts/types";
 import "./styles/main.scss";
@@ -21,38 +25,57 @@ import "./styles/main.scss";
  * attaches change handler for interactivity, and renders initial chart.
  */
 loadData()
-  .then(
-    ({ rawData }: { rawData: RawDataEntry[] }) => {
-      const stations = getStations(rawData);
+  .then(({ rawData }: { rawData: RawDataEntry[] }) => {
+    const stations = getStations(rawData);
+    const select: d3.Selection<HTMLSelectElement, unknown, HTMLElement, any> =
+      d3.select("#stationSelect");
+    const WEIGHTED_OPTION = "Berlin Trend (excl. BER)";
 
-      const select: d3.Selection<HTMLSelectElement, unknown, HTMLElement, any> =
-        d3.select("#stationSelect");
+    // Populate dropdown options
+    select
+      .selectAll("option")
+      .data([...stations, WEIGHTED_OPTION])
+      .enter()
+      .append("option")
+      .text((d) => d)
+      .attr("value", (d) => d);
 
-      // Populate dropdown options
-      select
-        .selectAll("option")
-        .data(stations)
-        .enter()
-        .append("option")
-        .text((d) => d)
-        .attr("value", (d) => d);
+    // Prepare processed datasets for all stations (used for Y-axis max)
+    const allProcessed: ProcessedEntry[][] = stations.map((station) =>
+      filterDataByStation(rawData, station)
+    );
 
-      // Prepare processed datasets for all stations (used for Y-axis max)
-      const allProcessed: ProcessedEntry[][] = stations.map((station) =>
-        filterDataByStation(rawData, station)
-      );
+    // Prepare station datasets for weighting
+    const ruhleben = allProcessed[stations.indexOf("Klärwerk Ruhleben")];
+    const schoenerlinde = allProcessed[stations.indexOf("Klärwerk Schönerlinde")];
+    const wassmannsdorf = allProcessed[stations.indexOf("Klärwerk Waßmannsdorf")];
+    const weightedCurve = computeWeightedSeries(
+      ruhleben,
+      schoenerlinde,
+      wassmannsdorf
+    );
 
-      select.on("change", (event: Event) => {
-        const target = event.target as HTMLSelectElement;
-        const selectedStation = target.value;
-        const filtered: ProcessedEntry[] = filterDataByStation(rawData, selectedStation);
-        drawChart(filtered, rawData, allProcessed);
-      });
+    select.on("change", (event: Event) => {
+      const target = event.target as HTMLSelectElement;
+      const selectedStation = target.value;
 
-      const initialData: ProcessedEntry[] = filterDataByStation(rawData, stations[0]);
-      drawChart(initialData, rawData, allProcessed);
-    }
-  )
+      let filtered: ProcessedEntry[];
+
+      if (selectedStation === WEIGHTED_OPTION) {
+        filtered = weightedCurve;
+      } else {
+        filtered = filterDataByStation(rawData, selectedStation);
+      }
+
+      drawChart(filtered, rawData, allProcessed);
+    });
+
+    const initialData: ProcessedEntry[] = filterDataByStation(
+      rawData,
+      stations[0]
+    );
+    drawChart(initialData, rawData, allProcessed);
+  })
   .catch((error: unknown) => {
     console.error("Failed to load data:", error);
     const errorMessageElem = document.getElementById("error-message");

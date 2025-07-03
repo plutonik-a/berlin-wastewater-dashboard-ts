@@ -6,12 +6,13 @@
 
 /**
  * @file processData.ts
- * @description Filters and aggregates SARS-CoV-2 measurement data by station and date.
+ * @description Filters, aggregates, and optionally weights SARS-CoV-2 measurement data by station and date.
  * Only dPCR N1/N2 results are used. Values are averaged and converted for visualization.
  */
 
 import * as d3 from "d3";
 import type { RawDataEntry, ProcessedEntry } from "./types";
+import populationData from "../../data/populationByPlant.json";
 
 /**
  * Extracts unique station names from the raw dataset.
@@ -106,4 +107,92 @@ export function getGlobalMaxFromProcessedDatasets(datasets: ProcessedEntry[][]):
   const allValues = datasets.flatMap(data => data.map(d => d.value));
   const max = d3.max(allValues);
   return max ? Math.round(max * 1.1) : 0;
+}
+
+/**
+ * Computes the weighted average value for a specific date from three stations.
+ *
+ * @param ruhleben - Value from Ruhleben (or null)
+ * @param schoenerlinde - Value from Schönerlinde (or null)
+ * @param wassmannsdorf - Value from Waßmannsdorf (or null)
+ * @returns Weighted average based on population, or null if all inputs are null.
+ */
+export function computeWeightedAverage(
+  ruhleben: number | null,
+  schoenerlinde: number | null,
+  wassmannsdorf: number | null
+): number | null {
+  const totalPopulation =
+    populationData.Ruhleben +
+    populationData["Schönerlinde"] +
+    populationData["Waßmannsdorf"];
+
+  const weightedContributions: number[] = [];
+  let weightSum = 0;
+
+  if (ruhleben !== null) {
+    weightedContributions.push(ruhleben * populationData.Ruhleben);
+    weightSum += populationData.Ruhleben;
+  }
+
+  if (schoenerlinde !== null) {
+    weightedContributions.push(schoenerlinde * populationData["Schönerlinde"]);
+    weightSum += populationData["Schönerlinde"];
+  }
+
+  if (wassmannsdorf !== null) {
+    weightedContributions.push(wassmannsdorf * populationData["Waßmannsdorf"]);
+    weightSum += populationData["Waßmannsdorf"];
+  }
+
+  if (weightSum === 0) return null;
+
+  return d3.sum(weightedContributions) / weightSum;
+}
+
+/**
+ * Computes a new time series by calculating the weighted average per date.
+ *
+ * @param ruhlebenSeries - Array of processed entries for Ruhleben
+ * @param schoenerlindeSeries - Array for Schönerlinde
+ * @param wassmannsdorfSeries - Array for Waßmannsdorf
+ * @returns A new ProcessedEntry[] with weighted values per date
+ */
+export function computeWeightedSeries(
+  ruhlebenSeries: ProcessedEntry[],
+  schoenerlindeSeries: ProcessedEntry[],
+  wassmannsdorfSeries: ProcessedEntry[]
+): ProcessedEntry[] {
+  const dates = new Set<string>();
+  ruhlebenSeries.forEach(d => dates.add(d.date.toISOString()));
+  schoenerlindeSeries.forEach(d => dates.add(d.date.toISOString()));
+  wassmannsdorfSeries.forEach(d => dates.add(d.date.toISOString()));
+
+  const sortedDates = Array.from(dates).sort();
+
+  const result: ProcessedEntry[] = [];
+
+  for (const isoDate of sortedDates) {
+    const date = new Date(isoDate);
+
+    const getValue = (series: ProcessedEntry[]) =>
+      series.find(d => +d.date === +date)?.value ?? null;
+
+    const v1 = getValue(ruhlebenSeries);
+    const v2 = getValue(schoenerlindeSeries);
+    const v3 = getValue(wassmannsdorfSeries);
+
+    const weighted = computeWeightedAverage(v1, v2, v3);
+
+    if (weighted !== null) {
+      result.push({
+        date,
+        value: weighted,
+        min: weighted,
+        max: weighted,
+      });
+    }
+  }
+
+  return result;
 }

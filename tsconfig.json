@@ -5,7 +5,12 @@
     "module": "ESNext",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
-
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "baseUrl": "src",
+    "paths": {
+      "populationData": ["../data/populationByPlant.json"]
+    },
     /* Bundler mode */
     "moduleResolution": "node",
     "allowImportingTsExtensions": true,
