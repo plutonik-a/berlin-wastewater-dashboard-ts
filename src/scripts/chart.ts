@@ -60,9 +60,16 @@ export function drawChart(
 
   const xExtent = d3.extent(allValidDates) as [Date, Date];
 
-  // Extend the x-axis date end by 1 month, in order to visually pad the end of the chart
-  // Avoids the last data point being too close to the right edge
-  const paddedEndDate = d3.timeMonth.offset(xExtent[1], 1);
+  // "Today" tick mark at the end of x-axis
+  const today = new Date();
+
+  // Extend x-axis domain by 1 month (or to today if later) to avoid clipping the last point
+  // Ensures the final data and "Today" marker are both visible  
+  let paddedEndDate = d3.timeMonth.offset(xExtent[1], 1);
+
+  if (today > paddedEndDate) {
+    paddedEndDate = today; // Force domain to include today
+  }
 
   const x = d3.scaleTime()
     .domain([xExtent[0], paddedEndDate])
@@ -74,9 +81,6 @@ export function drawChart(
     .domain([0, globalMax])
     .nice()
     .range([height, 0]);
-
-  // "Today" tick mark at the end of x-axis
-  const today = new Date();
 
   // Render a vertical tick + label for "Today" 
   // if it lies within the padded x-axis domain

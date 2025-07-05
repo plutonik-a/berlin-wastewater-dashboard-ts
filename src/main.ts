@@ -26,6 +26,13 @@ import "./styles/main.scss";
  */
 loadData()
   .then(({ rawData }: { rawData: RawDataEntry[] }) => {
+    // Parse dates robustly for comparison
+    const parseDate = d3.timeParse("%d.%m.%Y");
+    const parsedDates = rawData
+      .map((d) => parseDate(d.extraction_date))
+      .filter(Boolean) as Date[];
+    const latestDate = d3.max(parsedDates);
+
     const stations = getStations(rawData);
     const select: d3.Selection<HTMLSelectElement, unknown, HTMLElement, any> =
       d3.select("#stationSelect");
