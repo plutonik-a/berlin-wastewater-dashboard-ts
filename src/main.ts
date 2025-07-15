@@ -20,9 +20,13 @@ import { drawChart } from "./scripts/chart";
 import type { RawDataEntry, ProcessedEntry } from "./scripts/types";
 import "./styles/main.scss";
 
+let rawDataCurrent: RawDataEntry[] = [];
+let filteredDataCurrent: ProcessedEntry[] = [];
+let allProcessedCurrent: ProcessedEntry[][] = [];
+
 /**
- * Main entry point: loads data from the API, populates the station dropdown,
- * attaches change handler for interactivity, and renders initial chart.
+ * Loads data, populates the station dropdown, renders the initial chart,
+ * and attaches event handlers for interactivity and responsiveness.
  */
 loadData()
   .then(({ rawData }: { rawData: RawDataEntry[] }) => {
@@ -41,7 +45,7 @@ loadData()
     // Populate dropdown options
     select
       .selectAll("option")
-      .data([...stations, WEIGHTED_OPTION])
+      .data([...stations, STATION_WEIGHTED_OPTION])
       .enter()
       .append("option")
       .text((d) => d)
@@ -62,18 +66,19 @@ loadData()
       wassmannsdorf
     );
 
+    rawDataCurrent = rawData;
+    allProcessedCurrent = allProcessed;
+
     select.on("change", (event: Event) => {
       const target = event.target as HTMLSelectElement;
       const selectedStation = target.value;
 
-      let filtered: ProcessedEntry[];
+      const filtered =
+        selectedStation === STATION_WEIGHTED_OPTION
+          ? weightedCurve
+          : filterDataByStation(rawData, selectedStation);
 
-      if (selectedStation === WEIGHTED_OPTION) {
-        filtered = weightedCurve;
-      } else {
-        filtered = filterDataByStation(rawData, selectedStation);
-      }
-
+      filteredDataCurrent = filtered;
       drawChart(filtered, rawData, allProcessed);
     });
 
@@ -81,6 +86,7 @@ loadData()
       rawData,
       stations[0]
     );
+    filteredDataCurrent = initialData;
     drawChart(initialData, rawData, allProcessed);
   })
   .catch((error: unknown) => {
