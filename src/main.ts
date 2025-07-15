@@ -40,7 +40,7 @@ loadData()
     const stations = getStations(rawData);
     const select: d3.Selection<HTMLSelectElement, unknown, HTMLElement, any> =
       d3.select("#stationSelect");
-    const WEIGHTED_OPTION = "Berlin Trend (excl. BER)";
+    const STATION_WEIGHTED_OPTION = "Berlin Trend (excl. BER)";
 
     // Populate dropdown options
     select
@@ -88,6 +88,10 @@ loadData()
     );
     filteredDataCurrent = initialData;
     drawChart(initialData, rawData, allProcessed);
+
+    window.addEventListener("resize", () => {
+      drawChart(filteredDataCurrent, rawDataCurrent, allProcessedCurrent);
+    });
   })
   .catch((error: unknown) => {
     console.error("Failed to load data:", error);

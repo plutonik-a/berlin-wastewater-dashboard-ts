@@ -4,33 +4,40 @@
  * Licensed under the ISC License.
  */
 
-:root {
-  /* Base Colors */
-  --color-black: #111111;
-  --color-white: #ffffff;
-  --color-gray-light: #f5f5f5;
-  --color-gray: #cccccc;
-  --color-gray-dark: #333333;
-  --color-gray-darker: #222222;
-  
-  /* UI / Theme */
-  --color-primary: #a2b7db;
-  --color-background: var(--color-white);
-  --color-border:var(--color-gray);
-  --color-error: #d93025;
-  --color-text-dark: var(--color-gray-dark);
+ :root {
+   /* Base Colors */
+   --color-black: #111111;
+   --color-white: #ffffff;
+   --color-gray-light: #f5f5f5;
+   --color-gray: #cccccc;
+   --color-gray-dark: #333333;
+   --color-gray-darker: #222222;
 
-  /* Chart Colors */
-  --color-chart-line: #295499;
-  --color-chart-fill: #a2b7db;
-  --color-focus-line: var(--color-chart-line);
-  --color-today-line: #c4452f;
-  --color-today-label: #96301f;
-  --chart-today-color: #c4452f;
+   /* UI / Theme */
+   --color-primary: #a2b7db;
+   --color-background: var(--color-white);
+   --color-border: var(--color-gray);
+   --color-error: #d93025;
+   --color-text-dark: var(--color-gray-dark);
 
-  /* Typography */
-  --chart-label-font-size: 0.5rem;
-  --font-family-base: 'Arial', sans-serif;
-  --font-size-base: 14px;
-  --font-size-small: 13px;
-}
+   /* Chart Colors */
+   --chart-line-color: #295499;
+   --chart-fill-color: #a2b7db;
+   --chart-focus-line-color: var(--chart-line-color);
+   --chart-today-line-color: #c4452f;
+   --chart-today-label-color: #96301f;
+   --chart-axis-line-color: var(--color-black);
+   --chart-grid-line-color: var(--color-gray);
+
+   /* Typography */
+   --font-family-base: 'Arial', sans-serif;
+   --font-size-base: 14px;
+   --font-size-small: 13px;
+   --chart-label-font-size: clamp(0.6rem, 1vw, 1.2rem);
+
+   /* Chart dimensions */
+   --chart-width: clamp(800px, 90vw, 1332px);
+   --chart-height: clamp(250px, 60vh, 600px);
+   --x-axis-height: 40px;
+   --y-axis-width: calc(var(--chart-label-font-size) * 6);
+ }
