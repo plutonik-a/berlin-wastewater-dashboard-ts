@@ -7,7 +7,7 @@
 /**
  * @file chart.ts
  * @description Renders the interactive time series chart using D3.js.
- * Handles scales, axes, tooltips, and responsiveness.
+ * Provides scales, axes, tooltips, and responsive behaviour.
  */
 
 import * as d3 from "d3";
@@ -24,168 +24,185 @@ type DataPoint = {
 };
 
 /**
- * Renders an interactive time series chart using D3.js.
+ * Renders an interactive time series chart.
  *
- * Features:
- * - Smooth spline rendering via d3.curveMonotoneX
- * - Combined area and line visualization
- * - Tooltip with nearest value highlighting on hover/touch
- * - Custom vertical "Today" tick marker if within range
- * - Responsive axis ticks with month-wise filtering
- *
- * @param data - Filtered data for the selected station (aggregated by date)
- * @param rawData - Full raw dataset for calculating x-axis extent
- * @param allProcessed - Aggregated values for all stations (for y-axis scaling)
+ * @param data - Filtered dataset for the selected station (aggregated by date).
+ * @param rawData - Full raw dataset for x-axis extent calculation.
+ * @param allProcessed - Aggregated datasets for all stations (for global y-axis scaling).
  */
 export function drawChart(
   data: ProcessedEntry[],
   rawData: RawDataEntry[],
   allProcessed: ProcessedEntry[][]
 ) {
-  const svg = d3.select("svg")
-    .attr("viewBox", "0 0 1000 600")
-    .attr("preserveAspectRatio", "xMidYMid meet");
+  const container = document.querySelector(".chart-container") as HTMLElement;
+  const containerStyles = getComputedStyle(container);
+  const chartWidthStr = containerStyles.width;
+  const chartHeightStr = containerStyles.height;
+
+  const chartWidth = chartWidthStr ? parseFloat(chartWidthStr.replace("px", "")) : 0;
+  const chartHeight = chartHeightStr ? parseFloat(chartHeightStr.replace("px", "")) : 0;
+
+  const baseWidth = chartWidth || 1332;
+  const baseHeight = chartHeight || 300;
+
+  const yAxisContainer = document.querySelector(".y-axis") as HTMLElement;
+  const yWidth = yAxisContainer?.getBoundingClientRect().width || 50;
+
+  const svg = d3
+    .select("#chart-svg")
+    .attr("width", baseWidth)
+    .attr("height", baseHeight);
+
+  const xAxisSvg = d3
+    .select("#x-axis-svg")
+    .attr("width", baseWidth)
+    .attr("height", 40);
+
+  const yAxisSvg = d3
+    .select("#y-axis-svg")
+    .attr("width", yWidth)
+    .attr("height", baseHeight);
 
   svg.selectAll("*").remove();
+  xAxisSvg.selectAll("*").remove();
+  yAxisSvg.selectAll("*").remove();
 
-  const margin = { top: 20, right: 30, bottom: 60, left: 60 };
-  const width = 1000 - margin.left - margin.right;
-  const height = 600 - margin.top - margin.bottom;
+  const margin = { top: 0, right: 30, bottom: 0, left: 10 };
+  const width = baseWidth - margin.left - margin.right;
+  const height = baseHeight - margin.top - margin.bottom;
 
-  const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+  const g = svg
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
 
   const allValidDates = rawData
-    .map(d => new Date(d.extraction_date))
-    .filter(d => d instanceof Date && !isNaN(d.getTime()) && d <= new Date());
+    .map((d) => new Date(d.extraction_date))
+    .filter((d) => d instanceof Date && !isNaN(d.getTime()) && d <= new Date());
 
   const xExtent = d3.extent(allValidDates) as [Date, Date];
-
-  // "Today" tick mark at the end of x-axis
   const today = new Date();
-
-  // Extend x-axis domain by 1 month (or to today if later) to avoid clipping the last point
-  // Ensures the final data and "Today" marker are both visible  
   let paddedEndDate = d3.timeMonth.offset(xExtent[1], 1);
-
   if (today > paddedEndDate) {
-    paddedEndDate = today; // Force domain to include today
+    paddedEndDate = today;
   }
 
-  const x = d3.scaleTime()
-    .domain([xExtent[0], paddedEndDate])
-    .range([0, width]);
+  const x = d3.scaleTime().domain([xExtent[0], paddedEndDate]).range([0, width]);
 
   const globalMax = getGlobalMaxFromProcessedDatasets(allProcessed);
 
+  const topPadding = 10;
   const y = d3.scaleLinear()
     .domain([0, globalMax])
     .nice()
-    .range([height, 0]);
+    .range([height, -topPadding]);
 
-  // Render a vertical tick + label for "Today" 
-  // if it lies within the padded x-axis domain
-  if (today <= paddedEndDate) {
-    g.append("text")
-      .attr("x", x(today))
-      .attr("y", height + 9) // same height as D3 axis ticks
-      .attr("dy", "0.71em")  // same vertical offset as axis ticks!
+  const interval = d3.utcMonth.every(2);
+  if (!interval) throw new Error("Invalid tick interval");
+  const ticks = x.ticks(interval).filter((d) => d < d3.timeMonth.floor(today));
+
+  // Draw horizontal x-axis baseline
+  xAxisSvg
+    .append("line")
+    .attr("x1", margin.left)
+    .attr("x2", margin.left + width)
+    .attr("y1", 0)
+    .attr("y2", 0)
+    .attr("class", "chart-x-axis-line");
+
+  // Draw X-axis ticks
+  ticks.forEach((tickDate) => {
+    const tickX = margin.left + x(tickDate);
+    xAxisSvg
+      .append("line")
+      .attr("x1", tickX)
+      .attr("x2", tickX)
+      .attr("y1", 0)
+      .attr("y2", 6)
+      .attr("class", "chart-x-tick-line");
+
+    xAxisSvg
+      .append("text")
+      .attr("x", tickX)
+      .attr("y", 20)
       .attr("text-anchor", "middle")
-      .attr("class", "chart__today-label")
-      .text("Today");
+      .attr("class", "chart-tick-label")
+      .text(d3.timeFormat("%b %y")(tickDate));
+  });
 
-    g.append("line")
-      .attr("x1", x(today))
-      .attr("x2", x(today))
-      .attr("y1", height)
-      .attr("y2", height + 6)
-      .attr("class", "chart__today-tick");
+  if (today <= paddedEndDate) {
+    const todayX = margin.left + x(today);
+    xAxisSvg
+      .append("line")
+      .attr("x1", todayX)
+      .attr("x2", todayX)
+      .attr("y1", 0)
+      .attr("y2", 10)
+      .attr("class", "chart-today-tick");
+    xAxisSvg
+      .append("text")
+      .attr("x", todayX)
+      .attr("y", 13)
+      .attr("dy", "0.71em")
+      .attr("text-anchor", "middle")
+      .attr("class", "chart-today-label")
+      .text("Today");
   }
 
-  // Filter data to only include points within the x domain
-  const interval = d3.utcMonth.every(2);
-
-  if (!interval) throw new Error("Invalid tick interval");
-
-  // Exclude any ticks on or after the current month 
-  // to avoid overlapping with custom "Today" tick
-  const ticks = x.ticks(interval).filter(d => d < d3.timeMonth.floor(today));
-
-  // Axes
+  // Draw Y-axis grid lines in chart SVG
   g.append("g")
-    .attr("transform", `translate(0,${height})`)
     .call(
-      d3.axisBottom(x)
-        .tickValues(ticks)
-        .tickFormat((d: Date | d3.NumberValue) =>
-          d instanceof Date ? d3.timeFormat("%b %y")(d) : ""
-        )
+      d3.axisLeft(y).tickSize(-width).tickFormat(() => "")
+    )
+    .call((g) => g.select(".domain").remove())
+    .call((g) =>
+      g.selectAll(".tick line").attr("class", "chart-grid-line")
     );
 
-  g.append("g").call(d3.axisLeft(y));
+  yAxisSvg
+    .append("g")
+    .attr("transform", `translate(${yWidth},${margin.top})`)
+    .call(
+      d3.axisLeft(y)
+        .tickSize(0)
+        .tickPadding(5)
+    )
+    .call((g) => g.select(".domain").remove());
 
-  // Axis labels
-  g.append("text")
-    .attr("x", width / 2)
-    .attr("y", height + 40)
-    .attr("text-anchor", "middle")
-    .attr("class", "chart__axis-label")
-    .text("Date");
-
-  g.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("y", -50)
-    .attr("x", -height / 2)
-    .attr("text-anchor", "middle")
-    .attr("class", "chart__axis-label")
-    .text("Virus Load (Average)");
-
-  // Line path
-  const line = d3.line<DataPoint>()
-    .x(d => x(d.date))
-    .y(d => y(d.value))
+  // Draw area and line
+  const line = d3
+    .line<DataPoint>()
+    .x((d) => x(d.date))
+    .y((d) => y(d.value))
     .curve(d3.curveMonotoneX);
 
-  // Area path: Fills the area under the line
-  const area = d3.area<DataPoint>()
-    .x(d => x(d.date))
+  const area = d3
+    .area<DataPoint>()
+    .x((d) => x(d.date))
     .y0(y(0))
-    .y1(d => y(d.value))
+    .y1((d) => y(d.value))
     .curve(d3.curveMonotoneX);
 
-  g.append("path")
-    .datum(data)
-    .attr("class", "chart__area-fill")
-    .attr("d", area);
+  g.append("path").datum(data).attr("class", "chart-area-fill").attr("d", area);
+  g.append("path").datum(data).attr("class", "chart-line").attr("d", line);
 
-  // Line path
-  g.append("path")
-    .datum(data)
-    .attr("class", "chart__line")
-    .attr("d", line);
-
-  const focusPoint = g.append("circle")
-    .attr("class", "chart__focus-point");
-
-  const focusLine = g.append("line")
-    .attr("class", "chart__focus-line")
+  const focusPoint = g.append("circle").attr("class", "chart-focus-point");
+  const focusLine = g
+    .append("line")
+    .attr("class", "chart-focus-line")
     .attr("y1", 0)
     .attr("y2", height);
 
-  // Tooltip
   const tooltip = d3.select("#tooltip");
+  const bisectDate = d3.bisector<DataPoint, Date>((d) => d.date).left;
 
-  const bisectDate = d3.bisector<DataPoint, Date>(d => d.date).left;
-
-  const overlay = svg.append("rect")
+  const overlay = svg
+    .append("rect")
     .attr("transform", `translate(${margin.left},${margin.top})`)
     .attr("width", width)
     .attr("height", height)
-    .style("fill", "none")
-    .attr("class", "chart__overlay");
+    .attr("class", "chart-overlay");
 
-  /**
-   * Updates the tooltip and vertical guide line.
-   */
   function updateTooltip(event: PointerEvent | TouchEvent) {
     const pointer = d3.pointer(event as any);
     const mx = pointer[0];
@@ -193,42 +210,43 @@ export function drawChart(
     const i = bisectDate(data, x0, 1);
     const d0 = data[i - 1];
     const d1 = data[i];
-
-    const dClosest = !d0 ? d1 : !d1 ? d0 : (x0.getTime() - d0.date.getTime() > d1.date.getTime() - x0.getTime() ? d1 : d0);
+    const dClosest = !d0
+      ? d1
+      : !d1
+        ? d0
+        : x0.getTime() - d0.date.getTime() > d1.date.getTime() - x0.getTime()
+          ? d1
+          : d0;
     if (!dClosest) return;
 
     focusPoint
       .attr("cx", x(dClosest.date))
       .attr("cy", y(dClosest.value))
       .style("opacity", 1);
-
     focusLine
       .attr("x1", x(dClosest.date))
       .attr("x2", x(dClosest.date))
-      .attr("y1", y(0))              // Y-axis starts at 0
-      .attr("y2", y(dClosest.value)) // focus line extends to the value
+      .attr("y1", y(0))
+      .attr("y2", y(dClosest.value))
       .style("opacity", 1);
 
     tooltip
       .attr("aria-hidden", "false")
       .style("opacity", 1)
       .html(
-        `${formatDate(dClosest.date)}<br/>
-        ${formatNumberThousand(dClosest.value)} RNA copies / L`
+        `${formatDate(dClosest.date)}<br/>${formatNumberThousand(
+          dClosest.value
+        )} RNA copies / L`
       );
 
     const tooltipNode = tooltip.node() as HTMLElement;
     const tooltipWidth = tooltipNode.offsetWidth;
     const tooltipHeight = tooltipNode.offsetHeight;
     const pageX = (event as MouseEvent).pageX;
-
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const padding = 10;
 
-    // Position tooltip vertically: 
-    // center on pointer, adjust to stay in viewport
-    // to avoid tooltip clipping
     let top = y(dClosest.value) + margin.top - tooltipHeight / 2;
     if (top + tooltipHeight + padding > vh) {
       top = vh - tooltipHeight - padding;
@@ -241,7 +259,6 @@ export function drawChart(
     }
     if (left < padding) left = padding;
 
-    // Apply final tooltip position
     tooltip
       .style("left", `${left}px`)
       .style("top", `${top}px`);
@@ -255,7 +272,7 @@ export function drawChart(
       focusLine.style("opacity", 0);
       focusPoint.style("opacity", 0);
     })
-    .on("touchmove", event => {
+    .on("touchmove", (event) => {
       event.preventDefault();
       updateTooltip(event);
     })

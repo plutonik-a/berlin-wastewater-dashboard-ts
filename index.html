@@ -23,13 +23,24 @@
 
   <main class="main-content">
     <section class="station-selector">
-      <label class="station-selector__label" id="stationSelectLabel" for="stationSelect">Choose measuring point:</label>
-      <select class="station-selector__select" id="stationSelect" aria-labelledby="stationSelectLabel" tabindex="0"></select>
+      <label class="station-selector__label" id="stationSelectLabel" for="stationSelect">
+        Choose measuring point:
+      </label>
+      <select class="station-selector__select" id="stationSelect" aria-labelledby="stationSelectLabel"
+        tabindex="0"></select>
     </section>
 
-    <section class="chart-section">
-      <div class="chart-section__container" id="chart-container">
-        <svg class="chart-section__svg"></svg>
+    <section class="chart-layout">
+      <div class="y-axis">
+        <svg id="y-axis-svg" role="figure" aria-label="Y axis" class="chart-y-axis-svg"></svg>
+      </div>
+      <div class="chart-outer">
+        <div class="chart-container">
+          <svg id="chart-svg" role="figure" aria-label="Time series chart" class="chart-svg"></svg>
+        </div>
+        <div class="scale-container">
+          <svg id="x-axis-svg" role="figure" aria-label="X axis" class="chart-x-axis-svg"></svg>
+        </div>
       </div>
     </section>
 

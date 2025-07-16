@@ -1,0 +1,54 @@
+/*!
+ * Berlin Wastewater Dashboard
+ * Copyright (c) 2025 Alexandra von Criegern
+ * Licensed under the ISC License.
+ */
+
+.chart-layout {
+  display: flex;
+  flex-direction: row;
+
+  .y-axis {
+    flex: 0 0 var(--y-axis-width);
+    height: auto;
+    position: sticky;
+    left: 0;
+    background: var(--color-background);
+    z-index: 1;
+
+    .chart-y-axis-svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .chart-outer {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex: 1;
+  }
+
+  .chart-container {
+    width: var(--chart-width);
+    height: var(--chart-height);
+  }
+
+  .scale-container {
+    width: var(--chart-width);
+    height: var(--x-axis-height);
+  }
+
+  .chart-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible; // needed for focus-point near x-axis to be displayed
+  }
+
+  .chart-x-axis-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
