@@ -45,6 +45,11 @@
     stroke: var(--chart-axis-line-color);
   }
 
+  &-x-axis-line {
+    stroke: var(--chart-axis-line-color);
+    stroke-width: 1; 
+  }
+
   &-grid-line {
     stroke: var(--chart-grid-line-color);
     stroke-dasharray: 2, 2;

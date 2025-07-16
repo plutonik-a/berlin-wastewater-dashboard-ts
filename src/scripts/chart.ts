@@ -101,6 +101,15 @@ export function drawChart(
   if (!interval) throw new Error("Invalid tick interval");
   const ticks = x.ticks(interval).filter((d) => d < d3.timeMonth.floor(today));
 
+  // Draw horizontal x-axis baseline
+  xAxisSvg
+    .append("line")
+    .attr("x1", margin.left)
+    .attr("x2", margin.left + width)
+    .attr("y1", 0)
+    .attr("y2", 0)
+    .attr("class", "chart-x-axis-line");
+
   // Draw X-axis ticks
   ticks.forEach((tickDate) => {
     const tickX = margin.left + x(tickDate);
