@@ -10,6 +10,7 @@
  */
 
 import * as d3 from "d3";
+
 import { loadData } from "./scripts/loadData";
 import {
   filterDataByStation,
@@ -18,6 +19,7 @@ import {
 } from "./scripts/processData";
 import { drawChart } from "./scripts/chart";
 import type { RawDataEntry, ProcessedEntry } from "./scripts/types";
+
 import "./styles/main.scss";
 
 let rawDataCurrent: RawDataEntry[] = [];
@@ -79,7 +81,13 @@ loadData()
           : filterDataByStation(rawData, selectedStation);
 
       filteredDataCurrent = filtered;
-      drawChart(filtered, rawData, allProcessed);
+
+      drawChart({
+        containerSelector: ".chart-container",
+        data: filtered,
+        rawData,
+        allProcessed,
+      });
     });
 
     const initialData: ProcessedEntry[] = filterDataByStation(
@@ -87,10 +95,21 @@ loadData()
       stations[0]
     );
     filteredDataCurrent = initialData;
-    drawChart(initialData, rawData, allProcessed);
+
+    drawChart({
+      containerSelector: ".chart-container",
+      data: initialData,
+      rawData,
+      allProcessed,
+    });
 
     window.addEventListener("resize", () => {
-      drawChart(filteredDataCurrent, rawDataCurrent, allProcessedCurrent);
+      drawChart({
+        containerSelector: ".chart-container",
+        data: filteredDataCurrent,
+        rawData: rawDataCurrent,
+        allProcessed: allProcessedCurrent,
+      });
     });
   })
   .catch((error: unknown) => {
