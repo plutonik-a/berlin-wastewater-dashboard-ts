@@ -73,7 +73,7 @@ export function drawChart(config: ChartConfig): void {
   drawGridLines(g, y, width);
   drawLineAndArea(g, data, x, y);
 
-  addTooltip(g, svg, x, y, data);
+  addTooltip(g, svg, x, y, data, margin, width, height);
 }
 
 /**
@@ -302,18 +302,31 @@ function drawLineAndArea(
 
 /**
  * Adds interactive tooltip behaviour to the chart.
+ * Handles focus indicators (point and vertical line) and
+ * positions the tooltip dynamically with flip logic.
+ * Supports click-only interaction for data exploration.
+ *
+ * @param g - The D3 selection of the chart group (<g> element).
+ * @param svg - The D3 selection of the parent SVG element.
+ * @param x - D3 time scale for the X axis.
+ * @param y - D3 linear scale for the Y axis.
+ * @param data - The processed dataset used for tooltip interaction.
+ * @param margin - Margin object defining the chart padding.
+ * @param width - The width of the inner chart area (excluding margins).
+ * @param height - The height of the inner chart area (excluding margins).
  */
 function addTooltip(
   g: d3.Selection<SVGGElement, unknown, HTMLElement, unknown>,
   svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, unknown>,
   x: d3.ScaleTime<number, number>,
   y: d3.ScaleLinear<number, number>,
-  data: ProcessedEntry[]
+  data: ProcessedEntry[],
+  margin: { top: number; right: number; bottom: number; left: number },
+  width: number,
+  height: number
 ): void {
   const tooltip = d3.select("#tooltip");
-  const bisectDate = d3.bisector<ProcessedEntry, Date>(
-    (d) => d.date
-  ).left;
+  const bisectDate = d3.bisector<ProcessedEntry, Date>((d) => d.date).left;
 
   const focusPoint = g
     .append("circle")
@@ -328,59 +341,123 @@ function addTooltip(
   svg
     .append("rect")
     .attr("class", "chart-overlay")
-    .attr("width", x.range()[1])
-    .attr("height", y.range()[0])
+    .attr("x", margin.left)
+    .attr("y", margin.top)
+    .attr("width", width)
+    .attr("height", height)
     .on("mousemove", (event: MouseEvent) => updateTooltip(event))
     .on("mouseout", hideTooltip);
 
   /**
-   * Updates the tooltip and focus indicators on mouse move.
+   * Handles click events to update focus indicators
+   * and display the tooltip at the selected data point.
+   *
+   * @param event - The mouse event from the overlay.
    */
   function updateTooltip(event: MouseEvent): void {
     const [mouseX] = d3.pointer(event);
+    const adjustedMouseX = mouseX - margin.left;
+
+    const dClosest = findClosestDataPoint(adjustedMouseX);
+    if (!dClosest) return;
+
+    updateFocusIndicators(dClosest);
+    positionTooltip(dClosest);
+  }
+
+  /**
+   * Finds the closest data point to the given X mouse position.
+   *
+   * @param mouseX - The X coordinate of the mouse relative to the inner chart area.
+   * @returns The closest data point or null if no point is found.
+   */
+  function findClosestDataPoint(mouseX: number): ProcessedEntry | null {
     const x0 = x.invert(mouseX);
     const i = bisectDate(data, x0, 1);
     const d0 = data[i - 1];
     const d1 = data[i];
 
-    const dClosest =
-      !d0 || (d1 && x0 > d3.timeDay.offset(d0.date, 0.5))
-        ? d1
-        : d0;
-
-    if (!dClosest) return;
-
-    focusPoint
-      .attr("cx", x(dClosest.date))
-      .attr("cy", y(dClosest.value))
-      .style("opacity", 1);
-
-    focusLine
-      .attr("x1", x(dClosest.date))
-      .attr("x2", x(dClosest.date))
-      .attr("y1", y(0))
-      .attr("y2", y(dClosest.value)) // Ends at focus point
-      .style("opacity", 1);
-
-    tooltip
-      .attr("aria-hidden", "false")
-      .style("opacity", 1)
-      .html(
-        `${formatDate(dClosest.date)}<br/>${formatNumberThousand(
-          dClosest.value
-        )} RNA copies / L`
-      )
-      .style("left", `${event.pageX + 15}px`)
-      .style("top", `${event.pageY - 30}px`);
+    return !d0 || (d1 && x0 > d3.timeDay.offset(d0.date, 0.5)) ? d1 : d0;
   }
 
   /**
-   * Hides the tooltip and focus indicators on mouse out.
+   * Updates the focus point (circle) and vertical line
+   * on the chart to highlight the selected data point.
+   *
+   * @param d - The data point to focus on.
+   */
+  function updateFocusIndicators(d: ProcessedEntry): void {
+    focusPoint
+      .attr("cx", x(d.date))
+      .attr("cy", y(d.value))
+      .style("opacity", 1);
+
+    focusLine
+      .attr("x1", x(d.date))
+      .attr("x2", x(d.date))
+      .attr("y1", y(0))
+      .attr("y2", y(d.value))
+      .style("opacity", 1);
+  }
+
+  /**
+   * Positions the tooltip relative to the chart container
+   * with logic to flip horizontally and vertically if
+   * the tooltip would otherwise overflow the visible area.
+   *
+   * @param d - The data point to display in the tooltip.
+   */
+  function positionTooltip(d: ProcessedEntry): void {
+    const tooltipNode = tooltip.node() as HTMLElement | null;
+    if (!tooltipNode) return;
+
+    const tooltipWidth = tooltipNode.offsetWidth;
+    const tooltipHeight = tooltipNode.offsetHeight;
+
+    const container = document.querySelector(".chart-outer") as HTMLElement | null;
+    if (!container) return;
+
+    const pointX = x(d.date);
+    const pointY = y(d.value);
+
+    const visibleLeft = container.scrollLeft;
+    const visibleRight = visibleLeft + container.clientWidth;
+
+    let offsetX = pointX + 10;
+    let offsetY = pointY - tooltipHeight - 10;
+
+    if (pointX + tooltipWidth + 10 > visibleRight) {
+      offsetX = pointX - tooltipWidth - 10;
+    }
+
+    if (offsetX < visibleLeft) {
+      offsetX = visibleLeft + 5;
+    }
+
+    if (offsetY < 0) {
+      offsetY = pointY + 10;
+    }
+
+    tooltip
+      .attr("aria-hidden", "false")
+      .classed("visible", true)
+      .style("left", `${offsetX}px`)
+      .style("top", `${offsetY}px`)
+      .html(
+        `${formatDate(d.date)}<br/>${formatNumberThousand(
+          d.value
+        )} RNA copies / L`
+      );
+  }
+
+  /**
+   * Hides the tooltip and focus indicators when the mouse
+   * leaves the overlay area.
    */
   function hideTooltip(): void {
     tooltip
       .attr("aria-hidden", "true")
-      .style("opacity", 0);
+      .classed("visible", false);
     focusPoint.style("opacity", 0);
     focusLine.style("opacity", 0);
   }

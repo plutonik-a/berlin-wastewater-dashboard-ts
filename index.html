@@ -37,6 +37,7 @@
       <div class="chart-outer">
         <div class="chart-container">
           <svg id="chart-svg" role="figure" aria-label="Time series chart" class="chart-svg"></svg>
+          <div id="tooltip" class="tooltip" role="tooltip" aria-live="polite" aria-atomic="true" aria-hidden="true"></div>
         </div>
         <div class="scale-container">
           <svg id="x-axis-svg" role="figure" aria-label="X axis" class="chart-x-axis-svg"></svg>
@@ -44,7 +45,6 @@
       </div>
     </section>
 
-    <div id="tooltip" class="tooltip" role="tooltip" aria-live="polite" aria-atomic="true" aria-hidden="true"></div>
     <div class="message message--error" id="error-message" role="alert" aria-live="assertive"></div>
   </main>
 

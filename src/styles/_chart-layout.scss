@@ -32,6 +32,7 @@
   .chart-container {
     width: var(--chart-width);
     height: var(--chart-height);
+    position: relative;
   }
 
   .scale-container {

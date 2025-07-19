@@ -19,4 +19,9 @@
   color: var(--color-text-dark);
   max-width: 220px;
   word-wrap: break-word;
+
+  &.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
