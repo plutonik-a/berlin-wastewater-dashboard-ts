@@ -52,7 +52,7 @@ npm run fetch
 ```
 The script automatically compares against existing entries and merges only new records into `public/data/data.json`.
 
-This file is served directly by the frontend and is fetched at runtime.
+This file is fetched by the frontend at runtime.
 
 A timestamped console log shows which dates were added.
 
