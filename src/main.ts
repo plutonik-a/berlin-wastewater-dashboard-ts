@@ -37,7 +37,10 @@ loadData()
     const parsedDates = rawData
       .map((d) => parseDate(d.extraction_date))
       .filter(Boolean) as Date[];
+
+    // TODO: Display latest Update in UI
     const latestDate = d3.max(parsedDates);
+    console.log('latestDate=', latestDate)
 
     const stations = getStations(rawData);
     const select: d3.Selection<HTMLSelectElement, unknown, HTMLElement, any> =

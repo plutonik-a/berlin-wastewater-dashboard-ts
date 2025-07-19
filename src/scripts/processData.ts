@@ -122,11 +122,6 @@ export function computeWeightedAverage(
   schoenerlinde: number | null,
   wassmannsdorf: number | null
 ): number | null {
-  const totalPopulation =
-    populationData.Ruhleben +
-    populationData["Schönerlinde"] +
-    populationData["Waßmannsdorf"];
-
   const weightedContributions: number[] = [];
   let weightSum = 0;
 
