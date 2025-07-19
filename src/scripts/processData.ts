@@ -12,7 +12,7 @@
 
 import * as d3 from "d3";
 import type { RawDataEntry, ProcessedEntry } from "./types";
-import populationData from "../../data/populationByPlant.json";
+import populationData from "populationData";
 
 /**
  * Extracts unique station names from the raw dataset.

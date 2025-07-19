@@ -19,7 +19,7 @@ import type { RawDataEntry } from "./types";
  * @throws If the request fails or the response is not a valid array.
  */
 export async function loadData(): Promise<{ rawData: RawDataEntry[] }> {
-  const response = await fetch("/api/data");
+  const response = await fetch("/data/data.json");
 
   if (!response.ok) {
     let errorMsg = `Failed to load data (HTTP ${response.status} ${response.statusText})`;

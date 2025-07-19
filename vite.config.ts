@@ -11,6 +11,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
+      populationData: path.resolve(__dirname, 'data/populationByPlant.json'),
     },
   },
   server: {

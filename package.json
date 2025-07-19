@@ -1,6 +1,6 @@
 {
   "name": "berlin-wastewater-dashboard-ts",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
   "description": "Interactive dashboard visualizing SARS-CoV-2 and other viral loads in Berlin wastewater using D3 and TypeScript.",
@@ -15,7 +15,6 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx,.js",
-    "server": "node scripts/server.js",
     "add-header": "node scripts/insert-header.js .",
     "fetch": "node scripts/fetchLiveData.js"
   },

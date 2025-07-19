@@ -6,11 +6,11 @@
 
 /**
  * Fetches new wastewater COVID data from the API based on the latest date
- * found in the local data.json file. Designed for regular execution (e.g., via cron).
+ * found in the local public/data/data.json file. Designed for regular execution (e.g., via cron).
  * Only fetches data for days not yet present in the existing dataset.
  *
  * Steps:
- * - Reads the latest extraction_date from data.json
+ * - Reads the latest extraction_date from public/data/data.json
  * - Calculates next day and fetches until today
  * - Filters duplicates
  * - Appends new data and writes back to file
@@ -54,11 +54,11 @@ function findLatestDate(data) {
 }
 
 /**
- * Reads and parses data.json if it exists
+ * Reads and parses public/data/data.json if it exists
  */
 async function readExistingData() {
   try {
-    const str = await fs.readFile("data/data.json", "utf-8");
+    const str = await fs.readFile("public/data/data.json", "utf-8");
     const parsed = JSON.parse(str);
     return Array.isArray(parsed) ? parsed : [];
   } catch {
@@ -130,7 +130,7 @@ async function fetchIncremental() {
       (a, b) => parseCustomDate(a.extraction_date) - parseCustomDate(b.extraction_date)
     );
 
-    await fs.writeFile("data/data.json", JSON.stringify(combined, null, 2), "utf-8");
+    await fs.writeFile("public/data/data.json", JSON.stringify(combined, null, 2), "utf-8");
 
     console.log(`Added ${unique.length} new records. Total: ${combined.length}`);
   } catch (err) {

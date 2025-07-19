@@ -22,8 +22,8 @@ The application fetches raw data from the Berlin Hygiene Monitor API and compute
 - Node.js (ESM) for data fetching and merging
 - Vite for development and bundling
 - HTML5 & SCSS (BEM, responsive with clamp-based typography)
-- Fetch API
-- Open Data from the [Berlin Hygiene Monitor](https://hygiene-monitor.de/dashboard/corona) 
+- Fetch API (Frontend loads JSON data at runtime from `public/data/data.json`)
+- Open Data from the [Berlin Hygiene Monitor](https://hygiene-monitor.de/dashboard/corona)
 
 ## Setup
 
@@ -50,7 +50,9 @@ To fetch new data from the official API:
 ```bash
 npm run fetch
 ```
-The script automatically compares against existing entries and merges only new records into `data/data.json`. 
+The script automatically compares against existing entries and merges only new records into `public/data/data.json`.
+
+This file is served directly by the frontend and is fetched at runtime.
 
 A timestamped console log shows which dates were added.
 
