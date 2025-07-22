@@ -11,7 +11,6 @@
  */
 
 import * as d3 from "d3";
-
 import { formatNumberThousand, formatDate } from "./format";
 import { getGlobalMaxFromProcessedDatasets } from "./processData";
 import type { ProcessedEntry, RawDataEntry } from "./types";
@@ -47,10 +46,8 @@ export function drawChart(config: ChartConfig): void {
   const container = document.querySelector(containerSelector) as HTMLElement;
   const yAxisContainer = document.querySelector(".y-axis") as HTMLElement;
 
-  const { width: baseWidth, height: baseHeight } =
-    getContainerDimensions(container);
-  const yWidth =
-    yAxisContainer?.getBoundingClientRect().width || 50;
+  const { width: baseWidth, height: baseHeight } = getContainerDimensions(container);
+  const yWidth = yAxisContainer?.getBoundingClientRect().width || 50;
 
   const svg = selectAndPrepareSvg("#chart-svg", baseWidth, baseHeight);
   const xAxisSvg = selectAndPrepareSvg("#x-axis-svg", baseWidth, 40);
@@ -86,10 +83,8 @@ function getContainerDimensions(
   container: HTMLElement
 ): { width: number; height: number } {
   const styles = getComputedStyle(container);
-  const width =
-    parseFloat(styles.width.replace("px", "")) || 1332;
-  const height =
-    parseFloat(styles.height.replace("px", "")) || 300;
+  const width = parseFloat(styles.width.replace("px", "")) || 1332;
+  const height = parseFloat(styles.height.replace("px", "")) || 300;
   return { width, height };
 }
 
@@ -127,15 +122,12 @@ function createXScale(
   width: number
 ): d3.ScaleTime<number, number> {
   const dates = rawData
-    .map((d) => new Date(d.extraction_date))
-    .filter(
-      (d) =>
-        !isNaN(d.getTime()) && d <= new Date()
-    );
+    .map((d) => d3.timeParse("%d.%m.%Y")(d.extraction_date))
+    .filter((d): d is Date => d instanceof Date && !isNaN(d.getTime()) && d <= new Date());
 
   const xExtent = d3.extent(dates) as [Date, Date];
-  let endDate = d3.timeMonth.offset(xExtent[1], 1);
 
+  let endDate = d3.timeMonth.offset(xExtent[1], 1);
   if (new Date() > endDate) {
     endDate = new Date();
   }
@@ -157,8 +149,7 @@ function createYScale(
   allProcessed: ProcessedEntry[][],
   height: number
 ): d3.ScaleLinear<number, number> {
-  const globalMax =
-    getGlobalMaxFromProcessedDatasets(allProcessed);
+  const globalMax = getGlobalMaxFromProcessedDatasets(allProcessed);
   return d3
     .scaleLinear()
     .domain([0, globalMax])
@@ -243,9 +234,7 @@ function drawYAxis(
   svg
     .append("g")
     .attr("transform", `translate(${yWidth},${topMargin})`)
-    .call(
-      d3.axisLeft(y).tickSize(0).tickPadding(5)
-    )
+    .call(d3.axisLeft(y).tickSize(0).tickPadding(5))
     .call((g) => g.select(".domain").remove());
 }
 
@@ -258,13 +247,9 @@ function drawGridLines(
   width: number
 ): void {
   g.append("g")
-    .call(
-      d3.axisLeft(y).tickSize(-width).tickFormat(() => "")
-    )
+    .call(d3.axisLeft(y).tickSize(-width).tickFormat(() => ""))
     .call((g) => g.select(".domain").remove())
-    .call((g) =>
-      g.selectAll(".tick line").attr("class", "chart-grid-line")
-    );
+    .call((g) => g.selectAll(".tick line").attr("class", "chart-grid-line"));
 }
 
 /**
@@ -276,6 +261,25 @@ function drawLineAndArea(
   x: d3.ScaleTime<number, number>,
   y: d3.ScaleLinear<number, number>
 ): void {
+  const safeData = data
+    .map((d) => ({
+      ...d,
+      date: new Date(d.date.getTime()), // Force native Date for Safari compatibility
+    }))
+    .filter(
+      (d) =>
+        d.date instanceof Date &&
+        !isNaN(d.date.getTime()) &&
+        typeof d.value === "number" &&
+        !isNaN(x(d.date)) &&
+        !isNaN(y(d.value))
+    );
+
+  if (safeData.length === 0) {
+    console.warn("No valid data points to draw line/area.");
+    return; // Skip drawing if nothing valid
+  }
+
   const area = d3
     .area<ProcessedEntry>()
     .x((d) => x(d.date))
@@ -290,12 +294,12 @@ function drawLineAndArea(
     .curve(d3.curveMonotoneX);
 
   g.append("path")
-    .datum(data)
+    .datum(safeData)
     .attr("class", "chart-area-fill")
     .attr("d", area);
 
   g.append("path")
-    .datum(data)
+    .datum(safeData)
     .attr("class", "chart-line")
     .attr("d", line);
 }
@@ -330,7 +334,9 @@ function addTooltip(
 
   const focusPoint = g
     .append("circle")
-    .attr("class", "chart-focus-point");
+    .attr("class", "chart-focus-point")
+    .attr("r", 5)
+    .style("opacity", 0); // Start invisible
 
   const focusLine = g
     .append("line")
@@ -387,16 +393,24 @@ function addTooltip(
    * @param d - The data point to focus on.
    */
   function updateFocusIndicators(d: ProcessedEntry): void {
+    const safeDate = new Date(d.date.getTime());
+    const safeValue = d.value;
+
+    if (isNaN(x(safeDate)) || isNaN(y(safeValue))) {
+      return; // Skip rendering focusPoint if coordinates are invalid
+    }
+
     focusPoint
-      .attr("cx", x(d.date))
-      .attr("cy", y(d.value))
+      .attr("cx", x(safeDate))
+      .attr("cy", y(safeValue))
+      .attr("r", 5) // Explicit radius for Safari compatibility
       .style("opacity", 1);
 
     focusLine
-      .attr("x1", x(d.date))
-      .attr("x2", x(d.date))
+      .attr("x1", x(safeDate))
+      .attr("x2", x(safeDate))
       .attr("y1", y(0))
-      .attr("y2", y(d.value))
+      .attr("y2", y(safeValue))
       .style("opacity", 1);
   }
 

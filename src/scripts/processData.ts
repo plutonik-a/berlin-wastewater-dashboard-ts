@@ -21,10 +21,6 @@ import populationData from "populationData";
  * @returns Array of unique measuring_point strings.
  */
 export function getStations(rawData: RawDataEntry[]): string[] {
-  if (!Array.isArray(rawData)) {
-    console.warn("getStations called with invalid rawData:", rawData);
-    return [];
-  }
   return [...new Set(rawData.map((d) => d.measuring_point))];
 }
 
@@ -42,11 +38,20 @@ export function filterDataByStation(
   rawData: RawDataEntry[],
   station: string
 ): ProcessedEntry[] {
-  if (!Array.isArray(rawData)) {
-    return [];
-  }
+  // Normalize extraction_date to Date objects
+  const parsedData = rawData
+    .map((d) => {
+      const parsedDate = d3.timeParse("%d.%m.%Y")(d.extraction_date);
+      if (!parsedDate || isNaN(parsedDate.getTime())) {
+        console.warn("Skipping entry with invalid date:", d.extraction_date);
+        return null;
+      }
+      return { ...d, extraction_date: parsedDate }; // Leave as is
+    })
+    // Type guard here assumes the normalized type
+    .filter((d): d is RawDataEntry & { extraction_date: Date } => d !== null);
 
-  return rawData
+  return parsedData
     .filter((d) => d.measuring_point === station)
     .map((d) => {
       const testMeans: number[] = [];
@@ -81,10 +86,8 @@ export function filterDataByStation(
         }
       });
 
-      const date = d3.timeParse("%d.%m.%Y")(d.extraction_date);
-
       return {
-        date: date as Date,
+        date: d.extraction_date as Date,
         value: testMeans.length ? (d3.mean(testMeans) as number) : null,
         min: testMeans.length ? (d3.min(testMeans) as number) : null,
         max: testMeans.length ? (d3.max(testMeans) as number) : null,
