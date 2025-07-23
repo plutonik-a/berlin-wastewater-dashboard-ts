@@ -19,7 +19,7 @@ import {
 } from "./scripts/processData";
 import { drawChart } from "./scripts/chart";
 import type { RawDataEntry, ProcessedEntry } from "./scripts/types";
-
+import { formatDateUS } from "./scripts/format";
 import "normalize.css";
 import "./styles/main.scss";
 
@@ -39,9 +39,15 @@ loadData()
       .map((d) => parseDate(d.extraction_date))
       .filter(Boolean) as Date[];
 
-    // TODO: Display latest Update in UI
     const latestDate = d3.max(parsedDates);
-    console.log('latestDate=', latestDate)
+    const lastUpdatedElem = document.getElementById("lastUpdated");
+
+    if (latestDate && lastUpdatedElem) {
+      const formattedDate = formatDateUS(latestDate);
+      lastUpdatedElem.textContent = `Last Updated: ${formattedDate}`;
+    } else if (lastUpdatedElem) {
+      lastUpdatedElem.setAttribute("hidden", "true");
+    }
 
     const stations = getStations(rawData);
     const select: d3.Selection<HTMLSelectElement, unknown, HTMLElement, any> =

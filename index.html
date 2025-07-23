@@ -21,13 +21,17 @@
   </header>
 
   <main class="main-content">
-    <section class="station-selector">
-      <label class="station-selector__label" id="stationSelectLabel" for="stationSelect">
-        Data Source:
-      </label>
-      <select class="station-selector__select" id="stationSelect" aria-labelledby="stationSelectLabel"
-        tabindex="0"></select>
-    </section>
+    <div class="toolbar flex-row">
+      <section class="toolbar__station">
+        <label class="toolbar__label" id="stationSelectLabel" for="stationSelect">
+          Data Source:
+        </label>
+        <select class="toolbar__select" id="stationSelect" aria-labelledby="stationSelectLabel"
+          tabindex="0"></select>
+      </section>
+    
+      <p id="lastUpdated" class="last-updated toolbar__last-updated" aria-live="polite"></p>
+    </div>
 
     <section class="chart-layout">
       <div class="y-axis">

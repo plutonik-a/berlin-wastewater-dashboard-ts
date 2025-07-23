@@ -36,3 +36,18 @@ export function formatDate(date: Date): string {
     year: "numeric",
   });
 }
+
+/**
+ * Formats a JavaScript Date object to US English long format.
+ * E.g., new Date(2025, 6, 16) → "July 16, 2025"
+ *
+ * @param date - The Date object to format.
+ * @returns Formatted date string.
+ */
+export function formatDateUS(date: Date): string {
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}

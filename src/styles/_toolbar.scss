@@ -3,9 +3,15 @@
  * Copyright (c) 2025 Alexandra von Criegern
  * Licensed under the ISC License.
  */
- 
-.station-selector {
-  margin-bottom: 1rem;
+
+.toolbar {
+  margin: 0 0 1rem 0;
+  gap: 1rem;
+  align-items: flex-end;
+
+  &__station {
+    flex: 1 1 auto;
+  }
 
   &__label {
     display: block;
@@ -20,5 +26,13 @@
     font-size: var(--font-size-base);
     border: 1px solid var(--color-border);
     border-radius: 4px;
+    
+  }
+
+  &__last-updated {
+    white-space: nowrap;
+    font-size: var(--font-size-base);
+    color: var(--color-text-dark);
+    margin: 0;
   }
 }
