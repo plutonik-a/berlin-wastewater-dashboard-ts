@@ -25,7 +25,7 @@
 
   .chart-outer {
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow-y: hidden;
     flex: 1;
   }
 
