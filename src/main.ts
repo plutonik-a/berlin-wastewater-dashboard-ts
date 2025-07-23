@@ -20,6 +20,7 @@ import {
 import { drawChart } from "./scripts/chart";
 import type { RawDataEntry, ProcessedEntry } from "./scripts/types";
 
+import "normalize.css";
 import "./styles/main.scss";
 
 let rawDataCurrent: RawDataEntry[] = [];
