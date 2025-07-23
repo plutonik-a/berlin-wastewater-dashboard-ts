@@ -47,14 +47,17 @@ loadData()
       d3.select("#stationSelect");
     const STATION_WEIGHTED_OPTION = "Berlin Trend (excl. BER)";
 
+    const DEFAULT_OPTION = STATION_WEIGHTED_OPTION;
+
     // Populate dropdown options
     select
       .selectAll("option")
-      .data([...stations, STATION_WEIGHTED_OPTION])
+      .data([STATION_WEIGHTED_OPTION, ...stations])
       .enter()
       .append("option")
       .text((d) => d)
-      .attr("value", (d) => d);
+      .attr("value", (d) => d)
+      .property("selected", (d) => d === DEFAULT_OPTION);
 
     // Prepare processed datasets for all stations (used for Y-axis max)
     const allProcessed: ProcessedEntry[][] = stations.map((station) =>
@@ -93,10 +96,10 @@ loadData()
       });
     });
 
-    const initialData: ProcessedEntry[] = filterDataByStation(
-      rawData,
-      stations[0]
-    );
+    const initialData: ProcessedEntry[] =
+      DEFAULT_OPTION === STATION_WEIGHTED_OPTION
+        ? weightedCurve
+        : filterDataByStation(rawData, DEFAULT_OPTION);
     filteredDataCurrent = initialData;
 
     drawChart({
