@@ -1,19 +1,21 @@
 # Berlin Wastewater Dashboard
 
+**Live App:** [virusdata.vercel.app](https://virusdata.vercel.app)
+
 This dashboard visualizes SARS-CoV-2 levels and other pathogens (e.g., RSV, Influenza) in Berlin’s wastewater to support public health monitoring through open environmental data.
 
 The application fetches raw data from the Berlin Hygiene Monitor API and computes per-sample mean, min, and max values from six gene measurements to simplify visualization.
 
 ## Features
 
-- Interactive time series chart of viral loads per wastewater treatment plant  
+- Interactive chart showing how viral loads change over time at each treatment plant  
 - Mean, min, and max values calculated per sample (N1 & N2 gene targets)  
-- Unified global Y-axis scaling for consistent comparison across stations  
+- Global Y-axis scaling for consistent comparison across stations  
 - Dropdown selection of measuring points, including a population-weighted "Berlin trend" curve  
-- Daily fetch of live data from the public API  
-- Automatic de-duplication of previously fetched records  
+- Live data from the public API, updated every 3–4 days *(Automated updates planned)*
+- Automatically removes duplicate data entries  
 - Modular TypeScript-based code structure  
-- Responsive layout (in progress) with dynamic X-axis domain and optimized tick labels
+- Responsive layout with adaptive X-axis scaling and optimized tick labels
 
 ## Technologies Used
 
@@ -54,8 +56,6 @@ The script automatically compares against existing entries and merges only new r
 
 This file is fetched by the frontend at runtime.
 
-A timestamped console log shows which dates were added.
-
 ## Data Source
 
 Data is provided by the Berlin Hygiene Monitor API:  
@@ -75,8 +75,8 @@ Test categories include:
 
 - SARS-CoV-2 (N1/N2 genes, various PCR methods)
 - PMMoV (Pepper mild mottle virus, used for normalization)
-- Influenza A and B
-- RSV (Respiratory Syncytial Virus)
+- Influenza A and B *(currently no data available)*
+- RSV (Respiratory Syncytial Virus) *(currently no data available)*
 - Occasionally: sequencing data (NGS Illumina)
 
 ## License
