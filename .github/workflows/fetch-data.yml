@@ -1,0 +1,28 @@
+# Berlin Wastewater Dashboard
+# Copyright (c) 2025 Alexandra von Criegern
+# Licensed under the ISC License.
+
+name: Fetch new data
+
+on:
+  schedule:
+    - cron: "0 6 * * *" # Runs daily at 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  fetch-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.10.0
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run fetch script
+        run: node scripts/fetchLiveData.js
