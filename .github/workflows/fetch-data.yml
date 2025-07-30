@@ -26,3 +26,6 @@ jobs:
 
       - name: Run fetch script
         run: node scripts/fetchLiveData.js
+
+      - name: Validate fetched data
+        run: node scripts/validateForChart.js
