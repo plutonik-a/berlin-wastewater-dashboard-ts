@@ -1,3 +1,9 @@
+/*!
+ * Berlin Wastewater Dashboard
+ * Copyright (c) 2025 Alexandra von Criegern
+ * Licensed under the ISC License.
+ */
+
 /**
  * @file chart-smoke.spec.js
  * @description Smoke test for chart rendering using Playwright.

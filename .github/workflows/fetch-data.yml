@@ -28,7 +28,7 @@ jobs:
         run: node scripts/fetchLiveData.js
 
       - name: Validate fetched data
-        run: node tests/validate/validateForChart.spec.js
+        run: node tests/validate/validateForChart.js
 
       - name: Build site
         run: npm run build
