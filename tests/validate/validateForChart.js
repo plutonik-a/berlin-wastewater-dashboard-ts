@@ -63,6 +63,16 @@ function validateChartRelevant(sample, index) {
     }
 
     copyValues.forEach((p, pIdx) => {
+      const raw = p.result.trim().toLowerCase();
+    
+      // Skip known non-numeric placeholders like "n. b.", "n.b.", "n.b"
+      if (raw.startsWith("n. b")) {
+        console.warn(
+          `sample[${index}].results[${rIdx}].parameter[${pIdx}]: skipping non-numeric placeholder "${p.result}"`
+        );
+        return;
+      }
+    
       const num = parseNumber(p.result);
       if (isNaN(num)) {
         throw new Error(

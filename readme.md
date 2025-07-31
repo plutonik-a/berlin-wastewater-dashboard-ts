@@ -46,15 +46,42 @@ The application fetches raw data from the Berlin Hygiene Monitor API and compute
    http://localhost:5173
    ```
 
-## Fetching New Data
+## Data Fetching
 
-To fetch new data from the official API:
-```bash
+New data from the official API is fetched automatically via GitHub Actions (daily at 06:00 UTC).
+
+For local testing:
+```
 npm run fetch
 ```
-The script automatically compares against existing entries and merges only new records into `public/data/data.json`.
 
-This file is fetched by the frontend at runtime.
+The script compares the latest `extraction_date` and merges only new records into `public/data/data.json`, which is loaded by the frontend at runtime.
+
+## Testing
+
+### Data validation
+
+Checks SARS-CoV-2 data structure and values:
+
+```
+npm run validate
+```
+
+### UI smoke test
+
+Checks if chart loads and displays data:
+
+```
+npm run test:chart
+```
+
+### Full test suite
+
+Runs both validation and UI test:
+
+```
+npm test
+```
 
 ## Data Source
 

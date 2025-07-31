@@ -28,4 +28,16 @@ jobs:
         run: node scripts/fetchLiveData.js
 
       - name: Validate fetched data
-        run: node scripts/validateForChart.js
+        run: node tests/validate/validateForChart.spec.js
+
+      - name: Build site
+        run: npm run build
+
+      - name: Serve built site locally
+        run: npx serve dist -l 4173 &
+
+      - name: Wait for preview server to be ready
+        run: npx wait-on http://localhost:4173
+
+      - name: Run UI tests with Playwright
+        run: npm run test:chart
