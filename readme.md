@@ -1,5 +1,8 @@
 # Berlin Wastewater Dashboard
 
+[![CI](https://github.com/plutonik-a/berlin-wastewater-dashboard-ts/actions/workflows/fetch-data.yml/badge.svg)](https://github.com/plutonik-a/berlin-wastewater-dashboard-ts/actions/workflows/fetch-data.yml)
+[![Last Commit](https://img.shields.io/github/last-commit/plutonik-a/berlin-wastewater-dashboard-ts)](https://github.com/plutonik-a/berlin-wastewater-dashboard-ts/commits/main)
+
 **Live App:** [virusdata.vercel.app](https://virusdata.vercel.app)
 
 This dashboard visualizes SARS-CoV-2 levels and other pathogens (e.g., RSV, Influenza) in Berlin’s wastewater to support public health monitoring through open environmental data.
