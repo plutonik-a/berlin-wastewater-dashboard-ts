@@ -49,9 +49,93 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
         run: |
+          DATA_FILE="public/data/data.json"
+
           git config user.name "Alexandra von Criegern"
           git config user.email "plutonik@gmx.net"
-          git pull --rebase origin main
-          git add public/data/data.json
-          git diff --quiet --cached || git commit -m "chore(data): update from latest API fetch"
-          git push https://x-access-token:$GH_TOKEN@github.com/${{ github.repository }} HEAD:main
+
+          echo "=== Checking current repository state ==="
+          git status --porcelain
+
+          echo "=== Ensuring we're on main branch ==="
+          git checkout main
+
+          echo "=== Fetching latest changes from remote ==="
+          git fetch origin main
+
+          echo "=== Stashing any local changes ==="
+          if ! git diff --quiet || ! git diff --cached --quiet; then
+            echo "Local changes detected - stashing them"
+            git stash push --include-untracked -m "GHA: temporary stash $(date)"
+            STASH_CREATED=true
+          else
+            echo "No local changes to stash"
+            STASH_CREATED=false
+          fi
+
+          echo "=== Resetting to latest remote state ==="
+          git reset --hard origin/main
+
+          if [ "$STASH_CREATED" = true ]; then
+            echo "=== Restoring stashed changes ==="
+            if git stash pop; then
+              echo "Stash successfully restored"
+            else
+              echo "Stash restore failed - handling conflicts"
+              git checkout --theirs $DATA_FILE || true
+              git add $DATA_FILE || true
+              git stash drop || true
+            fi
+          fi
+
+          echo "=== Checking for changes in target file ==="
+          if git diff --quiet HEAD $DATA_FILE; then
+            echo "No changes in $DATA_FILE - workflow completed successfully"
+            exit 0
+          fi
+
+          echo "Changes detected in $DATA_FILE"
+          git diff --stat HEAD $DATA_FILE
+
+          echo "=== Staging and committing changes ==="
+          git add $DATA_FILE
+
+          if git diff --cached --quiet; then
+            echo "No staged changes after add - nothing to commit"
+            exit 0
+          fi
+
+          COMMIT_MSG="chore(data): update from latest API fetch"
+          git commit -m "$COMMIT_MSG"
+
+          echo "=== Pushing changes to remote ==="
+          MAX_RETRIES=3
+          RETRY_COUNT=0
+
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            if git push https://x-access-token:$GH_TOKEN@github.com/${{ github.repository }} HEAD:main; then
+              echo "Successfully pushed changes to remote"
+              exit 0
+            else
+              RETRY_COUNT=$((RETRY_COUNT + 1))
+              echo "Push failed (attempt $RETRY_COUNT/$MAX_RETRIES)"
+              
+              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                echo "=== Retrying after fetching latest changes ==="
+                git fetch origin main
+                
+                if git rebase origin/main; then
+                  echo "Rebase successful, retrying push"
+                else
+                  echo "Rebase failed, using merge strategy"
+                  git rebase --abort || true
+                  git merge origin/main -m "GHA: merge latest changes before retry"
+                fi
+                
+                sleep 2
+              else
+                echo "All push attempts failed"
+                exit 1
+              fi
+            fi
+          done
