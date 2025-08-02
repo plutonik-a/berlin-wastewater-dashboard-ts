@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/plutonik-a/berlin-wastewater-dashboard-ts/actions/workflows/fetch-data.yml/badge.svg)](https://github.com/plutonik-a/berlin-wastewater-dashboard-ts/actions/workflows/fetch-data.yml)
 [![Last Commit](https://img.shields.io/github/last-commit/plutonik-a/berlin-wastewater-dashboard-ts)](https://github.com/plutonik-a/berlin-wastewater-dashboard-ts/commits/main)
+![Version](https://img.shields.io/github/package-json/v/plutonik-a/berlin-wastewater-dashboard-ts)
 
 **Live App:** [virusdata.vercel.app](https://virusdata.vercel.app)
 
