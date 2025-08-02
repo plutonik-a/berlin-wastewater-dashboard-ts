@@ -54,4 +54,4 @@ jobs:
           git pull --rebase origin main
           git add public/data/data.json
           git diff --quiet --cached || git commit -m "chore(data): update from latest API fetch"
-          git push https://$GH_TOKEN@github.com/${{ github.repository }}.git HEAD:main
+          git push https://x-access-token:$GH_TOKEN@github.com/${{ github.repository }} HEAD:main
