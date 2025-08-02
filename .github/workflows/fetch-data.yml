@@ -53,7 +53,7 @@ jobs:
 
           git config user.name "Alexandra von Criegern"
           git config user.email "plutonik@gmx.net"
-          git config url."https://x-access-token:$GH_TOKEN@github.com/".insteadOf "https://github.com/"
+          git remote set-url origin "https://x-access-token:$GH_TOKEN@github.com/${{ github.repository }}.git"
 
           echo "=== Checking current repository state ==="
           git status --porcelain
