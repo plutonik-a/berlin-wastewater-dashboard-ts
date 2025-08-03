@@ -82,7 +82,7 @@ jobs:
           fi
 
           # Commit changes
-          git commit -m "chore(data): update from latest API fetch"
+          git commit -m "chore(data): automated update from latest API fetch"
 
           if git push origin HEAD:main; then
             echo "Successfully pushed changes"
