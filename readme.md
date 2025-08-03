@@ -16,7 +16,7 @@ The application fetches raw data from the Berlin Hygiene Monitor API and compute
 - Mean, min, and max values calculated per sample (N1 & N2 gene targets)  
 - Global Y-axis scaling for consistent comparison across stations  
 - Dropdown selection of measuring points, including a population-weighted "Berlin trend" curve  
-- Live data from the public API, updated every 3–4 days *(Automated updates planned)*
+- Live data fetched daily from the public API via GitHub Actions (commit only if data changed)  
 - Automatically removes duplicate data entries  
 - Modular TypeScript-based code structure  
 - Responsive layout with adaptive X-axis scaling and optimized tick labels
@@ -28,7 +28,7 @@ The application fetches raw data from the Berlin Hygiene Monitor API and compute
 - Node.js (ESM) for data fetching and merging
 - Vite for development and bundling
 - HTML5 & SCSS (BEM, responsive with clamp-based typography)
-- Fetch API (Frontend loads JSON data at runtime from `public/data/data.json`)
+- Fetch API (frontend loads JSON data at runtime from `public/data/data.json`)
 - Open Data from the [Berlin Hygiene Monitor](https://hygiene-monitor.de/dashboard/corona)
 
 ## Setup
