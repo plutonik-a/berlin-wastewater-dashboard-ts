@@ -91268,5 +91268,169 @@
         ]
       }
     ]
+  },
+  {
+    "sample_number": "42508716",
+    "measuring_point": "Flughafen BER",
+    "extraction_date": "17.08.2025",
+    "results": [
+      {
+        "name": "dPCR_1 SARS-CoV-2 (N1)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "321905,5275"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "292344,8891"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "409170,551"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_2 SARS-CoV-2 (N2)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "300421,4932"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "365525,1679"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "349096,712"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "sample_number": "12509370",
+    "measuring_point": "Klärwerk Ruhleben",
+    "extraction_date": "17.08.2025",
+    "results": [
+      {
+        "name": "dPCR_1 SARS-CoV-2 (N1)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "256557,6929"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "249398,551"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "227797,8436"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_2 SARS-CoV-2 (N2)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "272281,4393"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "228155,1139"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "190687,9959"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "sample_number": "62503976",
+    "measuring_point": "Klärwerk Schönerlinde",
+    "extraction_date": "17.08.2025",
+    "results": [
+      {
+        "name": "dPCR_1 SARS-CoV-2 (N1)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "353647,7253"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "266048,1453"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "304610,9751"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_2 SARS-CoV-2 (N2)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "283916,7357"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "271596,1702"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "272514,4479"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "sample_number": "42508715",
+    "measuring_point": "Klärwerk Waßmannsdorf",
+    "extraction_date": "17.08.2025",
+    "results": [
+      {
+        "name": "dPCR_1 SARS-CoV-2 (N1)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "442475,3938"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "447556,7466"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "346225,7"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_2 SARS-CoV-2 (N2)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "397060,2506"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "436488,7577"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "319145,4244"
+          }
+        ]
+      }
+    ]
   }
 ]
