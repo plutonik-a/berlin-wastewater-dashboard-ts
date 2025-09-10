@@ -92588,5 +92588,128 @@
         ]
       }
     ]
+  },
+  {
+    "sample_number": "12511477",
+    "measuring_point": "Klärwerk Ruhleben",
+    "extraction_date": "07.09.2025",
+    "results": [
+      {
+        "name": "dPCR_1 SARS-CoV-2 (N1)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "349035,1428"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "239547,6063"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "305776,5829"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_2 SARS-CoV-2 (N2)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "375257,6295"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "283953,2205"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "274327,3982"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "sample_number": "62504829",
+    "measuring_point": "Klärwerk Schönerlinde",
+    "extraction_date": "07.09.2025",
+    "results": [
+      {
+        "name": "dPCR_1 SARS-CoV-2 (N1)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "511739,4272"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "480135,1878"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "464263,6366"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_2 SARS-CoV-2 (N2)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "520659,921"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "516900,7194"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "432955,3587"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "sample_number": "42510201",
+    "measuring_point": "Klärwerk Waßmannsdorf",
+    "extraction_date": "07.09.2025",
+    "results": [
+      {
+        "name": "dPCR_1 SARS-CoV-2 (N1)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "537049,1918"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "563625,7635"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "611383,78"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_2 SARS-CoV-2 (N2)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "505651,3072"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "516942,8897"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "615891,4023"
+          }
+        ]
+      }
+    ]
   }
 ]
