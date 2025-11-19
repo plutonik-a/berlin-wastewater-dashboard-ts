@@ -95852,5 +95852,87 @@
         ]
       }
     ]
+  },
+  {
+    "sample_number": "12513071",
+    "measuring_point": "Klärwerk Ruhleben",
+    "extraction_date": "16.11.2025",
+    "results": [
+      {
+        "name": "dPCR_1 SARS-CoV-2 (N1)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "435903,3642"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "397103,3406"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "361353,1626"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_2 SARS-CoV-2 (N2)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "386307,7891"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "371933,4043"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "346276,1294"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "sample_number": "62505530",
+    "measuring_point": "Klärwerk Schönerlinde",
+    "extraction_date": "16.11.2025",
+    "results": [
+      {
+        "name": "dPCR_1 SARS-CoV-2 (N1)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "616194,5082"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "552381,6827"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "511231,4266"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_2 SARS-CoV-2 (N2)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "616170,1987"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "526025,7099"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "485894,1354"
+          }
+        ]
+      }
+    ]
   }
 ]
