@@ -104492,5 +104492,281 @@
         ]
       }
     ]
+  },
+  {
+    "sample_number": "12602302",
+    "measuring_point": "Klärwerk Ruhleben",
+    "extraction_date": "11.03.2026",
+    "results": [
+      {
+        "name": "dPCR_1 SARS-CoV-2 (N1)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "14826,07787"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "5037,778566"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "0"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_11 RSV",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "74147,91876"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "80628,43015"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "54876,45677"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_2 SARS-CoV-2 (N2)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "4941,831257"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "20152,31254"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "4987,784023"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_4 Influenza A",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "4941,831257"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "5037,778566"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "14963,94281"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_5 Influenza B",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "0"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "0"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "0"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "sample_number": "62601094",
+    "measuring_point": "Klärwerk Schönerlinde",
+    "extraction_date": "11.03.2026",
+    "results": [
+      {
+        "name": "dPCR_1 SARS-CoV-2 (N1)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "35253,12925"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "42098,65129"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "45657,84814"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_11 RSV",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "50364,58544"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "26310,09555"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "45657,84814"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_2 SARS-CoV-2 (N2)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "30216,37355"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "15785,43281"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "60880,74082"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_4 Influenza A",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "20143,45659"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "5261,602787"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "0"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_5 Influenza B",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "0"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "0"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "0"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "sample_number": "42602190",
+    "measuring_point": "Klärwerk Waßmannsdorf",
+    "extraction_date": "11.03.2026",
+    "results": [
+      {
+        "name": "dPCR_1 SARS-CoV-2 (N1)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "15891,49337"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "31418,89701"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "10259,43731"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_11 RSV",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "31784,9421"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "20945,10479"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "35911,56987"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_2 SARS-CoV-2 (N2)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "15891,49337"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "10472,13916"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "20519,68354"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_4 Influenza A",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "5296,947226"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "26181,89757"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "15389,45931"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_5 Influenza B",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "0"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "0"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "0"
+          }
+        ]
+      }
+    ]
   }
 ]
