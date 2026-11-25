@@ -117224,5 +117224,220 @@
         ]
       }
     ]
+  },
+  {
+    "sample_number": "42611068",
+    "measuring_point": "Flughafen BER",
+    "extraction_date": "22.11.2026",
+    "results": [
+      {
+        "name": "dPCR_1 SARS-CoV-2 (N1)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "222880,8044"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "264757,0502"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "272719,9797"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_2 SARS-CoV-2 (N2)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "227959,7156"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "270046,8753"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "308782,2312"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "sample_number": "12611917",
+    "measuring_point": "Klärwerk Ruhleben",
+    "extraction_date": "22.11.2026",
+    "results": [
+      {
+        "name": "dPCR_1 SARS-CoV-2 (N1)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "277141,1759"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "231320,671"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "224317,5108"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_2 SARS-CoV-2 (N2)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "207798,4579"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "226287,4812"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "239286,181"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_4 Influenza A",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "0"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "0"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "0"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "sample_number": "62606058",
+    "measuring_point": "Klärwerk Schönerlinde",
+    "extraction_date": "22.11.2026",
+    "results": [
+      {
+        "name": "dPCR_1 SARS-CoV-2 (N1)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "450166,7857"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "529829,7101"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "476071,6907"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_2 SARS-CoV-2 (N2)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "505895,4583"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "587707,9554"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "562358,6314"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_4 Influenza A",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "10098,34259"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "0"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "5055,111929"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "sample_number": "42611067",
+    "measuring_point": "Klärwerk Waßmannsdorf",
+    "extraction_date": "22.11.2026",
+    "results": [
+      {
+        "name": "dPCR_1 SARS-CoV-2 (N1)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "458316,4118"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "483933,9103"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "394856,3358"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_2 SARS-CoV-2 (N2)",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "448113,9154"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "420711,9237"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "410264,6246"
+          }
+        ]
+      },
+      {
+        "name": "dPCR_4 Influenza A",
+        "parameter": [
+          {
+            "name": "copy_number_1",
+            "result": "0"
+          },
+          {
+            "name": "copy_number_2",
+            "result": "0"
+          },
+          {
+            "name": "copy_number_3",
+            "result": "0"
+          }
+        ]
+      }
+    ]
   }
 ]
